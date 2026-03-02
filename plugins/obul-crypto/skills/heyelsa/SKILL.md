@@ -1,5 +1,5 @@
 ---
-name: heyelsa
+name: obul-heyelsa
 description: "USE THIS SKILL WHEN: the user wants DeFi portfolio analytics, token prices, wallet balances, swap execution, limit orders, staking positions, yield suggestions, airdrop checks, PnL reports, or gas prices via HeyElsa."
 homepage: https://x402.heyelsa.ai
 metadata:

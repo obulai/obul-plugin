@@ -1,5 +1,5 @@
 ---
-name: zapper
+name: obul-zapper
 description: "USE THIS SKILL WHEN: the user wants portfolio balances, DeFi app positions, NFT holdings, token prices, transaction history, or account identity data across 60+ chains via Zapper's GraphQL API."
 homepage: https://protocol.zapper.xyz
 metadata:

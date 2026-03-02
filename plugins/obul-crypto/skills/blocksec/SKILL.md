@@ -1,5 +1,5 @@
 ---
-name: blocksec
+name: obul-blocksec
 description: "USE THIS SKILL WHEN: the user wants blockchain address compliance screening, AML risk assessment, address labeling, KYA (Know Your Address) reports, or sanctions checking for Ethereum, Tron, BSC, and other chains."
 homepage: https://x402.blocksec.ai
 metadata:

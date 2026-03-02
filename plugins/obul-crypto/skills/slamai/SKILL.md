@@ -1,5 +1,5 @@
 ---
-name: slamai
+name: obul-slamai
 description: "USE THIS SKILL WHEN: the user wants smart money intelligence, wallet reputation scoring, WalletDNA behavioral analysis, token trades and transfers with smart money enrichment, trending or newest tokens, or token holder reputation data."
 homepage: https://www.slamai.xyz
 metadata:

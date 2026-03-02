@@ -1,68 +1,124 @@
 ---
-name: blackswan
-description: Get real-time risk intelligence and market safety signals from BlackSwan. Use when users need crypto market risk assessment, precursor detection, or state synthesis before taking action.
+name: obul-blackswan
+description: "USE THIS SKILL WHEN: the user wants real-time risk intelligence, market safety signals, precursor detection, or state synthesis. Provides pay-per-use risk intelligence via BlackSwan through the Obul proxy."
+homepage: https://x402.blackswan.wtf
+metadata:
+  obul-skill:
+    emoji: "🦢"
+    requires:
+      env: ["OBUL_API_KEY"]
+      primaryEnv: "OBUL_API_KEY"
+registries: {}
 ---
 
-# blackswan Skill
+# BlackSwan
 
-Real-time risk intelligence infrastructure for autonomous AI agents. BlackSwan monitors prediction markets, derivatives data, social signals, and news to assess whether it is safe to act in crypto markets.
+BlackSwan provides real-time risk intelligence for autonomous AI agents. Monitor prediction markets, derivatives data, social signals, and news to assess whether it is safe to act in crypto markets. No API key needed — payment is handled automatically by the Obul proxy.
 
-## When to Use
-- User asks whether market conditions are safe before executing a trade or action
-- User needs a quick risk signal or precursor detection (short-term, ~15 min window)
-- User needs deeper state synthesis and risk assessment (longer horizon, ~1 hour)
-- User mentions "risk assessment", "market safety", "black swan event", or "threat intelligence"
+## Authentication
 
-## Endpoints
+All requests route through the Obul proxy. Include your Obul API key in every request:
+
+```json
+{
+  "headers": {
+    "Content-Type": "application/json",
+    "x-obul-api-key": "{{OBUL_API_KEY}}"
+  }
+}
+```
+
+Base URL: `https://proxy.obul.ai/proxy/https/x402.blackswan.wtf`
+
+To get an Obul API key, sign up at **https://my.obul.ai**.
+
+## Common Operations
 
 ### Flare -- Precursor Detection
-- **URL**: `https://x402.blackswan.wtf/smart-agents/flare`
-- **Method**: POST
-- **Pricing**: ~$0.01 USDC per request
 
-**Request:**
-```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
-  -d '{}' \
-  "https://proxy.obul.ai/proxy/https/x402.blackswan.wtf/smart-agents/flare"
+Get quick risk signals with precursor detection for a short-term window (~15 minutes).
+
+**Pricing:** $0.01
+
+```json
+{
+  "method": "POST",
+  "url": "https://proxy.obul.ai/proxy/https/x402.blackswan.wtf/smart-agents/flare",
+  "headers": {
+    "Content-Type": "application/json",
+    "x-obul-api-key": "{{OBUL_API_KEY}}"
+  },
+  "body": {}
+}
 ```
 
-**Response:** JSON object with precursor detection signals covering a ~15-minute window. Indicates early warning signs of market disruption or anomalous activity.
+**Response:** JSON object with precursor detection signals covering a ~15-minute window.
 
 ### Core -- State Synthesis
-- **URL**: `https://x402.blackswan.wtf/smart-agents/core`
-- **Method**: POST
-- **Pricing**: ~$0.03 USDC per request
 
-**Request:**
-```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
-  -d '{}' \
-  "https://proxy.obul.ai/proxy/https/x402.blackswan.wtf/smart-agents/core"
+Get comprehensive state synthesis for a longer horizon (~1 hour).
+
+**Pricing:** $0.03
+
+```json
+{
+  "method": "POST",
+  "url": "https://proxy.obul.ai/proxy/https/x402.blackswan.wtf/smart-agents/core",
+  "headers": {
+    "Content-Type": "application/json",
+    "x-obul-api-key": "{{OBUL_API_KEY}}"
+  },
+  "body": {}
+}
 ```
 
-**Response:** JSON object with a comprehensive state synthesis covering up to a ~1-hour horizon. Combines prediction market data, derivatives, social signals, and news into an overall risk assessment.
+**Response:** JSON object with comprehensive state synthesis covering up to ~1 hour.
 
 ### Agent Info (Free)
-- **URL**: `https://x402.blackswan.wtf/smart-agents/{agent}`
-- **Method**: GET
-- **Pricing**: Free
 
-**Request:**
-```bash
-curl -sS \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/x402.blackswan.wtf/smart-agents/flare"
+Get agent metadata including description, capabilities, and pricing.
+
+**Pricing:** $0.00
+
+```json
+{
+  "method": "GET",
+  "url": "https://proxy.obul.ai/proxy/https/x402.blackswan.wtf/smart-agents/flare",
+  "headers": {
+    "Content-Type": "application/json",
+    "x-obul-api-key": "{{OBUL_API_KEY}}"
+  }
+}
 ```
 
 **Response:** Agent metadata including description, capabilities, and pricing.
 
-## Notes
-- All requests go through the Obul proxy; do not call `x402.blackswan.wtf` directly.
-- Flare is faster and cheaper for quick checks; Core provides deeper analysis at higher cost.
-- Payment is in USDC on Base (EIP-155:8453), handled automatically by the proxy.
-- BlackSwan also supports MCP integration at `mcp.blackswan.wtf/mcp` and ACP via Virtuals, but through Obul use the x402 endpoints above.
+## Endpoint Pricing Reference
+
+| Endpoint                    | Price | Purpose                              |
+|-----------------------------|-------|--------------------------------------|
+| `POST /smart-agents/flare` | $0.01 | Precursor detection (~15 min window) |
+| `POST /smart-agents/core`   | $0.03 | State synthesis (~1 hour horizon)   |
+| `GET /smart-agents/{agent}` | $0.00 | Agent metadata (free)               |
+
+## When to Use
+
+- **Risk assessment** — User asks whether market conditions are safe before executing a trade or action
+- **Quick signals** — User needs a quick risk signal or precursor detection (short-term)
+- **Deep analysis** — User needs deeper state synthesis and risk assessment (longer horizon)
+- **Threat intelligence** — User mentions "risk assessment", "market safety", "black swan event", or "threat intelligence"
+
+## Best Practices
+
+- **Use Flare for quick checks** — Flare is faster and cheaper for quick checks
+- **Use Core for deep analysis** — Core provides deeper analysis at higher cost
+- **Pre-trade checks** — Always check risk signals before executing significant trades
+
+## Error Handling
+
+| Error                       | Cause                                    | Solution                                                                                  |
+|-----------------------------|------------------------------------------|-------------------------------------------------------------------------------------------|
+| `402 Payment Required`      | Payment not processed or insufficient    | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai.   |
+| `400 Bad Request`           | Invalid request body                    | Ensure the request body is properly formatted.                                            |
+| `429 Too Many Requests`    | Rate limit exceeded                      | Add a short delay between requests.                                                       |
+| `500 Internal Server Error` | BlackSwan service issue                 | Wait a few seconds and retry. If persistent, the service may be experiencing downtime.     |

@@ -1,5 +1,5 @@
 ---
-name: zyte
+name: obul-zyte
 description: "USE THIS SKILL WHEN: the user needs to scrape a website that blocks bots, requires JavaScript rendering, or needs anti-bot bypass. Provides heavy-duty web scraping via Zyte API through the Obul proxy."
 homepage: https://www.zyte.com/zyte-api
 metadata:

@@ -1,5 +1,5 @@
 ---
-name: minifetch
+name: obul-minifetch
 description: "USE THIS SKILL WHEN: the user needs URL metadata, Open Graph tags, SEO data, or link discovery from a web page. Provides lightweight metadata extraction via Minifetch through the Obul proxy."
 homepage: https://minifetch.com
 metadata:
