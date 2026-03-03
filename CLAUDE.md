@@ -31,7 +31,7 @@ plugins/
 |--------|----------|--------|
 | `obul-core` | Infrastructure | obul-proxy, pinata, cnvrting |
 | `obul-scrape` | Web scraping | firecrawl, browserbase, zyte, minifetch, x402engine-web |
-| `obul-search` | Web search | firecrawl-search, exa |
+| `obul-search` | Web search | firecrawl-search, exa, geo |
 | `obul-social` | Social media | x-search, neynar, reddit |
 | `obul-crypto` | Blockchain/DeFi | coingecko, heyelsa, zapper, slamai, silverback, blocksec, x402engine-chain, ordiscan |
 | `obul-media` | Image/Audio/Video | freepik, x402engine-image, x402engine-audio, dtelecom, aibeats, genbase |
