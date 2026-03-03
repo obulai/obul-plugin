@@ -29,10 +29,10 @@
     {
       "name": "obul-search",
       "source": "./plugins/obul-search",
-      "description": "Web search via Firecrawl and Exa neural search",
+      "description": "Web search via Firecrawl, Exa neural search, and GEO visibility tracking",
       "version": "0.2.1",
       "category": "search",
-      "keywords": ["search", "web-search", "neural-search"]
+      "keywords": ["search", "web-search", "neural-search", "geo", "visibility", "brand-tracking"]
     },
     {
       "name": "obul-social",
