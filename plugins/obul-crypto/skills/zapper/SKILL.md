@@ -5,9 +5,6 @@ homepage: https://protocol.zapper.xyz
 metadata:
   obul-skill:
     emoji: "💰"
-    requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
 registries: {}
 ---
 
@@ -20,21 +17,18 @@ individually with no Zapper account or API key required.
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
+All requests use the `obulx` CLI, which handles proxy routing and authentication automatically.
 
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+Install and log in (one-time setup):
+
+```sh
+npm install -g @obul.ai/obulx
+obulx login
 ```
 
-Base URL: `https://proxy.obul.ai/proxy/https/public.zapper.xyz`
+Base URL: `https://public.zapper.xyz`
 
-All Zapper queries use a single GraphQL endpoint at `/graphql`. To get an Obul API key, sign up at
-**https://my.obul.ai**.
+All Zapper queries use a single GraphQL endpoint at `/graphql`.
 
 ## Common Operations
 
@@ -44,21 +38,10 @@ Retrieve all token balances for a wallet address across multiple chains, with US
 
 **Pricing:** $0.003
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/public.zapper.xyz/graphql",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "query": "query Portfolio($addresses: [Address!]!) { portfolioV2(addresses: $addresses) { tokenBalances { totalBalanceUSD byToken(first: 25) { totalCount edges { node { symbol name balanceUSD balance network { name chainId } } } } } } }",
-    "variables": {
-      "addresses": ["0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"]
-    }
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"query": "query Portfolio($addresses: [Address!]!) { portfolioV2(addresses: $addresses) { tokenBalances { totalBalanceUSD byToken(first: 25) { totalCount edges { node { symbol name balanceUSD balance network { name chainId } } } } } } }", "variables": {"addresses": ["0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"]}}' \
+  "https://public.zapper.xyz/graphql"
 ```
 
 **Response:** JSON object with total portfolio value in USD, broken down by individual token holdings including symbol,
@@ -70,21 +53,10 @@ Retrieve all DeFi protocol positions for a wallet, including lending, staking, L
 
 **Pricing:** $0.003
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/public.zapper.xyz/graphql",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "query": "query AppBalances($addresses: [Address!]!) { portfolioV2(addresses: $addresses) { appBalances { byApp(first: 25) { totalCount edges { node { appName balanceUSD network { name } } } } } } }",
-    "variables": {
-      "addresses": ["0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"]
-    }
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"query": "query AppBalances($addresses: [Address!]!) { portfolioV2(addresses: $addresses) { appBalances { byApp(first: 25) { totalCount edges { node { appName balanceUSD network { name } } } } } } }", "variables": {"addresses": ["0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"]}}' \
+  "https://public.zapper.xyz/graphql"
 ```
 
 **Response:** JSON object with DeFi positions grouped by application (Aave, Uniswap, Lido, etc.), including balance
@@ -96,21 +68,10 @@ Retrieve all NFT holdings for a wallet with collection metadata, estimated valua
 
 **Pricing:** $0.003
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/public.zapper.xyz/graphql",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "query": "query NftBalances($addresses: [Address!]!) { portfolioV2(addresses: $addresses) { nftBalances { totalTokensOwned byCollection(first: 25) { totalCount edges { node { collection { name floorPrice { valueUsd } } balanceUSD tokenCount } } } } } }",
-    "variables": {
-      "addresses": ["0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"]
-    }
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"query": "query NftBalances($addresses: [Address!]!) { portfolioV2(addresses: $addresses) { nftBalances { totalTokensOwned byCollection(first: 25) { totalCount edges { node { collection { name floorPrice { valueUsd } } balanceUSD tokenCount } } } } } }", "variables": {"addresses": ["0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"]}}' \
+  "https://public.zapper.xyz/graphql"
 ```
 
 **Response:** JSON object with total NFTs owned, collections with floor prices, estimated USD value, and token counts.
@@ -121,22 +82,10 @@ Retrieve real-time pricing, market data, holders, and recent swaps for a specifi
 
 **Pricing:** $0.003
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/public.zapper.xyz/graphql",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "query": "query TokenPrice($address: Address!, $network: Network!) { fungibleToken(address: $address, network: $network) { symbol name price marketCap totalSupply holders { totalCount } } }",
-    "variables": {
-      "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-      "network": "ETHEREUM_MAINNET"
-    }
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"query": "query TokenPrice($address: Address!, $network: Network!) { fungibleToken(address: $address, network: $network) { symbol name price marketCap totalSupply holders { totalCount } } }", "variables": {"address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", "network": "ETHEREUM_MAINNET"}}' \
+  "https://public.zapper.xyz/graphql"
 ```
 
 **Response:** JSON object with token symbol, name, current price, market cap, total supply, and holder count.
@@ -147,22 +96,10 @@ Retrieve human-readable transaction history for a wallet with structured asset d
 
 **Pricing:** $0.003
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/public.zapper.xyz/graphql",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "query": "query Transactions($addresses: [Address!]!, $first: Int) { transactionHistoryV2(addresses: $addresses, first: $first) { edges { node { hash timestamp network { name } interpretation { description } } } } }",
-    "variables": {
-      "addresses": ["0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"],
-      "first": 10
-    }
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"query": "query Transactions($addresses: [Address!]!, $first: Int) { transactionHistoryV2(addresses: $addresses, first: $first) { edges { node { hash timestamp network { name } interpretation { description } } } } }", "variables": {"addresses": ["0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"], "first": 10}}' \
+  "https://public.zapper.xyz/graphql"
 ```
 
 **Response:** JSON object with transaction list including hash, timestamp, network, and human-readable interpretation
@@ -215,9 +152,9 @@ of what the transaction did (e.g., "Swapped 1 ETH for 3,200 USDC on Uniswap").
 
 | Error                      | Cause                                    | Solution                                                                                  |
 |----------------------------|------------------------------------------|-------------------------------------------------------------------------------------------|
-| `402 Payment Required`     | Payment not processed or insufficient    | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai.  |
+| `402 Payment Required`     | Payment not processed or insufficient    | Verify your account has sufficient balance at my.obul.ai. Run `obulx login` if not authenticated. |
 | `400 Bad Request`          | Malformed GraphQL query                  | Validate your GraphQL query syntax. Check field names match the schema.                   |
-| `401 Unauthorized`         | Missing or invalid API key               | Ensure the `x-obul-api-key` header is present with a valid key.                           |
+| `401 Unauthorized`         | Missing or invalid authentication        | Run `obulx login` to authenticate.                                                        |
 | `429 Too Many Requests`    | Rate limit exceeded                      | Reduce request frequency. Portfolio queries are limited to 2-5 RPS depending on tier.     |
 | `500 Internal Server Error`| Upstream Zapper service issue            | Wait a few seconds and retry. If persistent, the service may be experiencing downtime.    |
 | `503 Service Unavailable`  | Zapper service temporarily down          | Retry after a brief wait.                                                                 |

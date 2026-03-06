@@ -22,10 +22,8 @@ Access Farcaster protocol data through Neynar's x402-enabled API. Search casts, 
 - **Pricing**: ~$0.01 per request
 
 **Request:**
-```bash
-curl -sS -X GET \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/api.neynar.com/v2/farcaster/cast/search?q=ethereum&limit=25"
+```sh
+obulx "https://api.neynar.com/v2/farcaster/cast/search?q=ethereum&limit=25"
 ```
 
 **Query Parameters:**
@@ -46,10 +44,8 @@ curl -sS -X GET \
 - **Pricing**: ~$0.01 per request
 
 **Request:**
-```bash
-curl -sS -X GET \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/api.neynar.com/v2/farcaster/user/search?q=vitalik&limit=10"
+```sh
+obulx "https://api.neynar.com/v2/farcaster/user/search?q=vitalik&limit=10"
 ```
 
 **Query Parameters:**
@@ -65,10 +61,8 @@ curl -sS -X GET \
 - **Pricing**: ~$0.01 per request
 
 **Request:**
-```bash
-curl -sS -X GET \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/api.neynar.com/v2/farcaster/user/bulk?fids=3,194"
+```sh
+obulx "https://api.neynar.com/v2/farcaster/user/bulk?fids=3,194"
 ```
 
 **Query Parameters:**
@@ -83,10 +77,8 @@ curl -sS -X GET \
 - **Pricing**: ~$0.01 per request
 
 **Request:**
-```bash
-curl -sS -X GET \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/api.neynar.com/v2/farcaster/feed?feed_type=filter&filter_type=channel_id&channel_id=ethereum&limit=25"
+```sh
+obulx "https://api.neynar.com/v2/farcaster/feed?feed_type=filter&filter_type=channel_id&channel_id=ethereum&limit=25"
 ```
 
 **Query Parameters:**
@@ -105,10 +97,8 @@ curl -sS -X GET \
 - **Pricing**: ~$0.01 per request
 
 **Request:**
-```bash
-curl -sS -X GET \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/api.neynar.com/v2/farcaster/channel/search?q=defi"
+```sh
+obulx "https://api.neynar.com/v2/farcaster/channel/search?q=defi"
 ```
 
 **Query Parameters:**
@@ -118,7 +108,7 @@ curl -sS -X GET \
 
 ## Notes
 - Neynar's x402 mode activates when no `x-api-key` header is present; the Obul proxy handles payment automatically
-- All endpoints are GET requests; omit `-d` and `Content-Type` headers
+- All endpoints are GET requests; no Content-Type header needed
 - Pricing is approximately $0.01 per request across all endpoints
 - Use `cursor` from response for pagination through large result sets
 - FID (Farcaster ID) is the unique numeric identifier for each Farcaster user

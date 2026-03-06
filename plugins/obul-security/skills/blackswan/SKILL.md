@@ -21,12 +21,10 @@ Real-time risk intelligence infrastructure for autonomous AI agents. BlackSwan m
 - **Pricing**: ~$0.01 USDC per request
 
 **Request:**
-```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
+```sh
+obulx -X POST -H "Content-Type: application/json" \
   -d '{}' \
-  "https://proxy.obul.ai/proxy/https/x402.blackswan.wtf/smart-agents/flare"
+  "https://x402.blackswan.wtf/smart-agents/flare"
 ```
 
 **Response:** JSON object with precursor detection signals covering a ~15-minute window. Indicates early warning signs of market disruption or anomalous activity.
@@ -37,12 +35,10 @@ curl -sS -X POST \
 - **Pricing**: ~$0.03 USDC per request
 
 **Request:**
-```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
+```sh
+obulx -X POST -H "Content-Type: application/json" \
   -d '{}' \
-  "https://proxy.obul.ai/proxy/https/x402.blackswan.wtf/smart-agents/core"
+  "https://x402.blackswan.wtf/smart-agents/core"
 ```
 
 **Response:** JSON object with a comprehensive state synthesis covering up to a ~1-hour horizon. Combines prediction market data, derivatives, social signals, and news into an overall risk assessment.
@@ -53,10 +49,8 @@ curl -sS -X POST \
 - **Pricing**: Free
 
 **Request:**
-```bash
-curl -sS \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/x402.blackswan.wtf/smart-agents/flare"
+```sh
+obulx "https://x402.blackswan.wtf/smart-agents/flare"
 ```
 
 **Response:** Agent metadata including description, capabilities, and pricing.

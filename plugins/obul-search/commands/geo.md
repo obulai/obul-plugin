@@ -21,15 +21,13 @@ Check how a brand appears across AI search engines via the GEO visibility tracki
 2. Run the visibility check:
 
 ```sh
-curl -sS -X POST \
-  -H "Content-Type: application/json" \
-  -H "x-obul-api-key: $OBUL_API_KEY" \
+obulx -X POST -H "Content-Type: application/json" \
   -d '{
     "prompt": "<the prompt>",
     "brand": "<the brand>",
     "models": ["perplexity", "openai", "gemini", "claude", "grok"]
   }' \
-  "https://proxy.obul.ai/proxy/https/geo.x402endpoints.com/v1/visibility/check"
+  "https://geo.x402endpoints.com/v1/visibility/check"
 ```
 
 3. Present results as a summary table:

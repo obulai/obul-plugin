@@ -24,12 +24,10 @@ Pay-per-call blockchain operations from x402engine. Covers wallet analytics, ENS
 - **Pricing**: ~$0.005 per request
 
 **Request:**
-```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
+```sh
+obulx -X POST -H "Content-Type: application/json" \
   -d '{"address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045", "chain": "ethereum"}' \
-  "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/wallet/balances"
+  "https://x402-gateway-production.up.railway.app/api/wallet/balances"
 ```
 
 **Response:** JSON with token balances, USD values, and total portfolio value.
@@ -40,12 +38,10 @@ curl -sS -X POST \
 - **Pricing**: ~$0.005 per request
 
 **Request:**
-```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
+```sh
+obulx -X POST -H "Content-Type: application/json" \
   -d '{"address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045", "chain": "ethereum"}' \
-  "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/wallet/transactions"
+  "https://x402-gateway-production.up.railway.app/api/wallet/transactions"
 ```
 
 **Response:** JSON array of recent transactions with hash, from, to, value, and timestamp.
@@ -56,12 +52,10 @@ curl -sS -X POST \
 - **Pricing**: ~$0.01 per request
 
 **Request:**
-```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
+```sh
+obulx -X POST -H "Content-Type: application/json" \
   -d '{"address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"}' \
-  "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/wallet/pnl"
+  "https://x402-gateway-production.up.railway.app/api/wallet/pnl"
 ```
 
 **Response:** JSON with realized/unrealized PnL breakdown per token.
@@ -72,10 +66,8 @@ curl -sS -X POST \
 - **Pricing**: ~$0.001 per request
 
 **Request:**
-```bash
-curl -sS \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/ens/resolve?name=vitalik.eth"
+```sh
+obulx "https://x402-gateway-production.up.railway.app/api/ens/resolve?name=vitalik.eth"
 ```
 
 **Response:** JSON with the resolved Ethereum address.
@@ -86,10 +78,8 @@ curl -sS \
 - **Pricing**: ~$0.001 per request
 
 **Request:**
-```bash
-curl -sS \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/ens/reverse?address=0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
+```sh
+obulx "https://x402-gateway-production.up.railway.app/api/ens/reverse?address=0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
 ```
 
 **Response:** JSON with the ENS name associated with the address.
@@ -100,12 +90,10 @@ curl -sS \
 - **Pricing**: ~$0.005 per request
 
 **Request:**
-```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
+```sh
+obulx -X POST -H "Content-Type: application/json" \
   -d '{"tokens": ["bitcoin", "ethereum", "solana"]}' \
-  "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/token/prices"
+  "https://x402-gateway-production.up.railway.app/api/token/prices"
 ```
 
 **Response:** JSON with current prices for each requested token. Supports up to 200 tokens per request.
@@ -116,10 +104,8 @@ curl -sS -X POST \
 - **Pricing**: ~$0.002 per request
 
 **Request:**
-```bash
-curl -sS \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/token/metadata?id=ethereum"
+```sh
+obulx "https://x402-gateway-production.up.railway.app/api/token/metadata?id=ethereum"
 ```
 
 **Response:** JSON with token name, symbol, description, links, and contract addresses.
@@ -130,10 +116,8 @@ curl -sS \
 - **Pricing**: ~$0.001 per request
 
 **Request:**
-```bash
-curl -sS \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/crypto/price?ids=bitcoin,ethereum"
+```sh
+obulx "https://x402-gateway-production.up.railway.app/api/crypto/price?ids=bitcoin,ethereum"
 ```
 
 **Response:** JSON with current USD prices for the requested coins.
@@ -144,10 +128,8 @@ curl -sS \
 - **Pricing**: ~$0.001 per request
 
 **Request:**
-```bash
-curl -sS \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/crypto/trending"
+```sh
+obulx "https://x402-gateway-production.up.railway.app/api/crypto/trending"
 ```
 
 **Response:** JSON array of currently trending cryptocurrencies.
@@ -158,12 +140,10 @@ curl -sS \
 - **Pricing**: ~$0.01 per request
 
 **Request:**
-```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
+```sh
+obulx -X POST -H "Content-Type: application/json" \
   -d '{"from": "0x...", "to": "0x...", "value": "1000000000000000000", "data": "0x...", "chain": "ethereum"}' \
-  "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/tx/simulate"
+  "https://x402-gateway-production.up.railway.app/api/tx/simulate"
 ```
 
 **Response:** JSON with simulation results including gas estimate, state changes, and potential errors.
@@ -172,4 +152,4 @@ curl -sS -X POST \
 - Prices range from $0.001 to $0.01 per request depending on endpoint complexity.
 - Wallet endpoints accept EVM addresses and support multiple chains (ethereum, base, polygon, arbitrum, etc.).
 - ENS endpoints are Ethereum-specific.
-- The Obul proxy handles x402 payment automatically -- no USDC wallet or payment header needed.
+- The `obulx` CLI handles x402 payment automatically -- no USDC wallet or payment header needed.

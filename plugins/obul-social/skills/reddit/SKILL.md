@@ -22,12 +22,10 @@ Access Reddit data through StableEnrich's x402-enabled API. Search for Reddit po
 - **Pricing**: ~$0.02 per request
 
 **Request:**
-```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
+```sh
+obulx -X POST -H "Content-Type: application/json" \
   -d '{"query": "rust programming language", "sort": "relevance", "timeframe": "month", "maxResults": 10}' \
-  "https://proxy.obul.ai/proxy/https/stableenrich.dev/api/reddit/search"
+  "https://stableenrich.dev/api/reddit/search"
 ```
 
 **Parameters:**
@@ -44,12 +42,10 @@ curl -sS -X POST \
 - **Pricing**: ~$0.02 per request
 
 **Request:**
-```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
+```sh
+obulx -X POST -H "Content-Type: application/json" \
   -d '{"url": "https://www.reddit.com/r/programming/comments/abc123/example_post/"}' \
-  "https://proxy.obul.ai/proxy/https/stableenrich.dev/api/reddit/post-comments"
+  "https://stableenrich.dev/api/reddit/post-comments"
 ```
 
 **Parameters:**

@@ -21,12 +21,10 @@ AI agent security infrastructure via the Orac Safety Layer. Provides prompt inje
 - **Pricing**: ~$0.005 USDC per request
 
 **Request:**
-```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
+```sh
+obulx -X POST -H "Content-Type: application/json" \
   -d '{"input": "the text to scan for prompt injection"}' \
-  "https://proxy.obul.ai/proxy/https/orac-safety.orac.workers.dev/v1/scan"
+  "https://orac-safety.orac.workers.dev/v1/scan"
 ```
 
 **Response:** JSON object with injection detection results including a risk assessment and classification of whether the input contains prompt injection attempts.
@@ -37,12 +35,10 @@ curl -sS -X POST \
 - **Pricing**: ~$0.02 USDC per request
 
 **Request:**
-```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
+```sh
+obulx -X POST -H "Content-Type: application/json" \
   -d '{"code": "function example() { eval(userInput); }", "language": "javascript"}' \
-  "https://proxy.obul.ai/proxy/https/orac-safety.orac.workers.dev/v1/audit"
+  "https://orac-safety.orac.workers.dev/v1/audit"
 ```
 
 **Response:** JSON object with identified vulnerabilities, severity ratings, and remediation suggestions for the submitted code.

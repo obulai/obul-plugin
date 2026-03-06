@@ -22,17 +22,10 @@ Generate AI images using Freepik's Mystic model via their x402-enabled endpoint.
 - **Pricing**: ~$0.02-0.05 per request
 
 **Request:**
-```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "prompt": "A futuristic city at sunset with neon lights reflecting on wet streets",
-    "model": "realism",
-    "resolution": "2k",
-    "aspect_ratio": "widescreen_16_9"
-  }' \
-  "https://proxy.obul.ai/proxy/https/api.freepik.com/v1/x402/ai/mystic"
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"prompt": "A futuristic city at sunset with neon lights reflecting on wet streets", "model": "realism", "resolution": "2k", "aspect_ratio": "widescreen_16_9"}' \
+  "https://api.freepik.com/v1/x402/ai/mystic"
 ```
 
 **Parameters:**

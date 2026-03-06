@@ -10,14 +10,12 @@ Proxy an HTTP request through Obul to any x402-enabled API. Obul handles payment
 
 The user provides `$ARGUMENTS` which should be a full upstream URL (e.g., `https://some-x402-service.com/api/endpoint`).
 
-Convert the upstream URL to the Obul proxy format by prepending `https://proxy.obul.ai/proxy/` and run:
+Run the request using obulx:
 
 ```sh
-curl -s "https://proxy.obul.ai/proxy/$ARGUMENTS" \
-  -H "Content-Type: application/json" \
-  -H "x-obul-api-key: $OBUL_API_KEY"
+obulx "$ARGUMENTS"
 ```
 
-If the user provides a request body or specific HTTP method, adjust the curl command accordingly (add `-X POST`, `-d '{...}'`, etc.).
+If the user provides a request body or specific HTTP method, adjust the command accordingly (add `-X POST`, `-d '{...}'`, etc.).
 
 Parse the JSON response and present the result to the user. If the response contains an error, explain what went wrong.

@@ -5,9 +5,6 @@ homepage: https://x402stt.dtelecom.org
 metadata:
   obul-skill:
     emoji: "🎙️"
-    requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
 registries: {}
 ---
 
@@ -20,20 +17,16 @@ Through the Obul proxy, each session is paid per minute at $0.005/min — no dTe
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
+All requests use the `obulx` CLI, which handles proxy routing and authentication automatically.
 
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+Install and log in (one-time setup):
+
+```sh
+npm install -g @obul.ai/obulx
+obulx login
 ```
 
-Base URL: `https://proxy.obul.ai/proxy/https/x402stt.dtelecom.org`
-
-To get an Obul API key, sign up at **https://my.obul.ai**.
+Base URL: `https://x402stt.dtelecom.org`
 
 ## Common Operations
 
@@ -44,19 +37,10 @@ session key and WebSocket URL for streaming audio.
 
 **Pricing:** $0.005 per minute (minimum 5 minutes = $0.025, maximum 120 minutes = $0.60)
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402stt.dtelecom.org/v1/session",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "minutes": 5,
-    "language": "en"
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"minutes": 5, "language": "en"}' \
+  "https://x402stt.dtelecom.org/v1/session"
 ```
 
 **Response:**
@@ -77,19 +61,10 @@ Add more time to an active session without interrupting the audio stream.
 
 **Pricing:** $0.005 per minute added
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402stt.dtelecom.org/v1/session/extend",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "session_id": "abc-123-uuid",
-    "minutes": 5
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"session_id": "abc-123-uuid", "minutes": 5}' \
+  "https://x402stt.dtelecom.org/v1/session/extend"
 ```
 
 **Response:**
@@ -108,14 +83,8 @@ Check the remaining time and usage of an active session. This endpoint is free.
 
 **Pricing:** $0.00
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/x402stt.dtelecom.org/v1/session/{session_id}/status",
-  "headers": {
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://x402stt.dtelecom.org/v1/session/{session_id}/status"
 ```
 
 **Response:**
@@ -172,14 +141,8 @@ Verify the STT service is available. No payment required.
 
 **Pricing:** $0.00
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/x402stt.dtelecom.org/health",
-  "headers": {
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://x402stt.dtelecom.org/health"
 ```
 
 ## Endpoint Pricing Reference
@@ -223,7 +186,7 @@ Verify the STT service is available. No payment required.
 
 | Error                          | Cause                                        | Solution                                                                                  |
 |--------------------------------|----------------------------------------------|-------------------------------------------------------------------------------------------|
-| `402 Payment Required`         | x402 payment not processed                   | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai.  |
+| `402 Payment Required`         | x402 payment not processed                   | Verify your account has sufficient balance at my.obul.ai. Run `obulx login` if not authenticated. |
 | `400 Bad Request`              | Missing or invalid parameters                | Ensure `minutes` (5-120) and `language` are provided and correctly typed.                  |
 | `404 Not Found`                | Session ID does not exist                    | Verify the session ID is correct. Sessions expire after their purchased time runs out.    |
 | `WS 4001`                      | Config timeout or invalid config             | Send the config message with valid session_key immediately after WebSocket connection.    |

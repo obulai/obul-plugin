@@ -24,10 +24,8 @@ Pay-per-request Bitcoin Ordinals and Runes data from Ordiscan. Query inscription
 - **Pricing**: ~$0.01 per request
 
 **Request:**
-```bash
-curl -sS \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/api.ordiscan.com/v1/inscription/b61b0172d95e266c18aea0c624db987e971a5d6d4ebc2aaed85da4642d635735i0"
+```sh
+obulx "https://api.ordiscan.com/v1/inscription/b61b0172d95e266c18aea0c624db987e971a5d6d4ebc2aaed85da4642d635735i0"
 ```
 
 **Response:** JSON with inscription details including content type, content URL, sat number, owner address, and genesis transaction.
@@ -38,10 +36,8 @@ curl -sS \
 - **Pricing**: ~$0.01 per request
 
 **Request:**
-```bash
-curl -sS \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/inscriptions"
+```sh
+obulx "https://api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/inscriptions"
 ```
 
 **Response:** JSON array of inscription IDs and metadata owned by the address.
@@ -52,10 +48,8 @@ curl -sS \
 - **Pricing**: ~$0.01 per request
 
 **Request:**
-```bash
-curl -sS \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/utxos"
+```sh
+obulx "https://api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/utxos"
 ```
 
 **Response:** JSON array of UTXOs with associated inscriptions and runes tied to each output.
@@ -66,10 +60,8 @@ curl -sS \
 - **Pricing**: ~$0.01 per request
 
 **Request:**
-```bash
-curl -sS \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/runes"
+```sh
+obulx "https://api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/runes"
 ```
 
 **Response:** JSON array of rune balances in the smallest denomination (no decimals).
@@ -80,10 +72,8 @@ curl -sS \
 - **Pricing**: ~$0.01 per request
 
 **Request:**
-```bash
-curl -sS \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/brc20"
+```sh
+obulx "https://api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/brc20"
 ```
 
 **Response:** JSON array of BRC-20 token balances with ticker and amount.
@@ -94,10 +84,8 @@ curl -sS \
 - **Pricing**: ~$0.01 per request
 
 **Request:**
-```bash
-curl -sS \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/rare-sats"
+```sh
+obulx "https://api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/rare-sats"
 ```
 
 **Response:** JSON array of rare sats with rarity classification and sat number.
@@ -108,10 +96,8 @@ curl -sS \
 - **Pricing**: ~$0.01 per request
 
 **Request:**
-```bash
-curl -sS \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/transfers"
+```sh
+obulx "https://api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/transfers"
 ```
 
 **Response:** JSON array of inscription transfer events with from/to addresses and transaction IDs.
@@ -120,4 +106,4 @@ curl -sS \
 - All endpoints cost ~$0.01 USDC per request.
 - Bitcoin addresses can be any format: P2PKH (1...), P2SH (3...), Bech32 (bc1q...), or Taproot (bc1p...).
 - Rune balances are returned in the smallest denomination and never have decimals.
-- The Obul proxy handles x402 payment automatically -- no USDC wallet or payment header needed.
+- The `obulx` CLI handles x402 payment automatically -- no USDC wallet or payment header needed.

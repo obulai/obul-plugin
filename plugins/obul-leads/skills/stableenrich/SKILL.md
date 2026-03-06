@@ -5,9 +5,6 @@ homepage: https://stableenrich.dev
 metadata:
   obul-skill:
     emoji: "👤"
-    requires:
-      env: [ "OBUL_API_KEY" ]
-      primaryEnv: "OBUL_API_KEY"
 registries: {}
 ---
 
@@ -20,18 +17,16 @@ provider — each request is paid individually through the Obul proxy.
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
+All requests use the `obulx` CLI, which handles proxy routing and authentication automatically.
 
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+Install and log in (one-time setup):
+
+```sh
+npm install -g @obul.ai/obulx
+obulx login
 ```
 
-Base URL: `https://proxy.obul.ai/proxy/https/stableenrich.dev`
+Base URL: `https://stableenrich.dev`
 
 ## Common Operations
 
@@ -42,21 +37,10 @@ and contact details.
 
 **Pricing:** $0.02
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/stableenrich.dev/api/apollo/people-search",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "q_keywords": "software engineer",
-    "person_locations": ["San Francisco"],
-    "per_page": 10,
-    "page": 1
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"q_keywords": "software engineer", "person_locations": ["San Francisco"], "per_page": 10, "page": 1}' \
+  "https://stableenrich.dev/api/apollo/people-search"
 ```
 
 **Response:** Array of people objects with name, title, company, location, email (may be obfuscated), and LinkedIn URL.
@@ -69,18 +53,10 @@ Scrape a public LinkedIn profile to get full professional details including expe
 
 **Pricing:** $0.04
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/stableenrich.dev/api/clado/linkedin-scrape",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "linkedin_url": "https://linkedin.com/in/johndoe"
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"linkedin_url": "https://linkedin.com/in/johndoe"}' \
+  "https://stableenrich.dev/api/clado/linkedin-scrape"
 ```
 
 **Response:** JSON object with the person's headline, current position, work experience history, education, skills, and
@@ -93,18 +69,10 @@ existence.
 
 **Pricing:** $0.03
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/stableenrich.dev/api/hunter/email-verifier",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "email": "john@acme.com"
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"email": "john@acme.com"}' \
+  "https://stableenrich.dev/api/hunter/email-verifier"
 ```
 
 **Response:** JSON object with verification result (deliverable, risky, or undeliverable), confidence score, and details
@@ -117,21 +85,10 @@ information. Supports Instagram, TikTok, YouTube, Twitter/X, and Facebook.
 
 **Pricing:** $0.40
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/stableenrich.dev/api/influencer/enrich-by-social",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "platform": "instagram",
-    "username": "johndoe",
-    "enrichment_mode": "full",
-    "email_required": false
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"platform": "instagram", "username": "johndoe", "enrichment_mode": "full", "email_required": false}' \
+  "https://stableenrich.dev/api/influencer/enrich-by-social"
 ```
 
 **Response:** JSON object with profile data including follower count, engagement rate, bio, contact info, and
@@ -144,19 +101,10 @@ Use the full variant for complete details or partial for basic info at lower cos
 
 **Pricing:** $0.02 (partial) / $0.08 (full)
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/stableenrich.dev/api/google-maps/text-search/full",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "textQuery": "coffee shops near Times Square NYC",
-    "maxResultCount": 10
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"textQuery": "coffee shops near Times Square NYC", "maxResultCount": 10}' \
+  "https://stableenrich.dev/api/google-maps/text-search/full"
 ```
 
 **Response:** Array of place objects with name, address, phone number, website, rating, review count, opening hours, and
@@ -217,7 +165,7 @@ Google Maps place ID. Use place-details with the place ID for even more detail.
 
 | Error                       | Cause                                       | Solution                                                                                  |
 |-----------------------------|---------------------------------------------|-------------------------------------------------------------------------------------------|
-| `402 Payment Required`      | Payment not processed or insufficient       | Verify your OBUL_API_KEY is valid and your account has sufficient balance.                |
+| `402 Payment Required`      | Payment not processed or insufficient       | Verify your account has sufficient balance at my.obul.ai. Run `obulx login` if not authenticated. |
 | `400 Bad Request`           | Missing or invalid parameters               | Check required fields — e.g., `linkedin_url` for Clado, `email` for Hunter.              |
 | `404 Not Found`             | Invalid endpoint path                       | Double-check the endpoint URL matches the reference table above.                          |
 | `429 Too Many Requests`     | Rate limit exceeded                         | Add a short delay between requests and avoid unnecessary rapid-fire calls.                |

@@ -5,9 +5,6 @@ homepage: https://tweetx402.com
 metadata:
   obul-skill:
     emoji: "🔍"
-    requires:
-      env: [ "OBUL_API_KEY" ]
-      primaryEnv: "OBUL_API_KEY"
 registries: {}
 ---
 
@@ -19,18 +16,16 @@ each request is paid individually through the Obul proxy.
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
+All requests use the `obulx` CLI, which handles proxy routing and authentication automatically.
 
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+Install and log in (one-time setup):
+
+```sh
+npm install -g @obul.ai/obulx
+obulx login
 ```
 
-Base URL: `https://proxy.obul.ai/proxy/https/x402.tweetx402.com`
+Base URL: `https://x402.tweetx402.com`
 
 ## Common Operations
 
@@ -41,15 +36,8 @@ Use the `mode` parameter to switch between Top, Latest, Photos, or Videos result
 
 **Pricing:** $0.001
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/x402.tweetx402.com/api/search?q=bitcoin&mode=Latest",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://x402.tweetx402.com/api/search?q=bitcoin&mode=Latest"
 ```
 
 **Response:** Array of tweet objects matching the query, each with tweet text, author info, engagement metrics (likes,
@@ -61,15 +49,8 @@ Fetch a public X/Twitter profile by username, including bio, follower and follow
 
 **Pricing:** $0.001
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/x402.tweetx402.com/api/profile/elonmusk",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://x402.tweetx402.com/api/profile/elonmusk"
 ```
 
 **Response:** JSON object with the user's display name, username, bio, follower count, following count, tweet count, and
@@ -81,15 +62,8 @@ Retrieve a single tweet by its ID, including full text, author info, and engagem
 
 **Pricing:** $0.001
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/x402.tweetx402.com/api/tweet/1234567890",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://x402.tweetx402.com/api/tweet/1234567890"
 ```
 
 **Response:** JSON object with the tweet's full text, author details, engagement metrics (likes, retweets, replies,
@@ -101,15 +75,8 @@ Fetch recent tweets from a specific user's timeline by username.
 
 **Pricing:** $0.001
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/x402.tweetx402.com/api/user/vaborisov/tweets?limit=20",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://x402.tweetx402.com/api/user/vaborisov/tweets?limit=20"
 ```
 
 **Response:** Array of the user's recent tweets, each with tweet text, engagement metrics, and timestamps. Default limit
@@ -121,15 +88,8 @@ Retrieve currently trending topics on X/Twitter.
 
 **Pricing:** $0.001
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/x402.tweetx402.com/api/trends",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://x402.tweetx402.com/api/trends"
 ```
 
 **Response:** Array of trending topics with topic name, tweet volume, and category information.
@@ -172,7 +132,7 @@ Retrieve currently trending topics on X/Twitter.
 
 | Error                       | Cause                                       | Solution                                                                                  |
 |-----------------------------|---------------------------------------------|-------------------------------------------------------------------------------------------|
-| `402 Payment Required`      | Payment not processed or insufficient       | Verify your OBUL_API_KEY is valid and your account has sufficient balance.                |
+| `402 Payment Required`      | Payment not processed or insufficient       | Verify your account has sufficient balance at my.obul.ai. Run `obulx login` if not authenticated. |
 | `400 Bad Request`           | Missing or invalid query parameters         | Ensure required parameters like `q` for search are provided and properly formatted.       |
 | `404 Not Found`             | Invalid username or tweet ID                | Double-check the username exists or the tweet ID is correct and the tweet is still public. |
 | `429 Too Many Requests`     | Rate limit exceeded                         | Add a short delay between requests and avoid unnecessary rapid-fire calls.                |

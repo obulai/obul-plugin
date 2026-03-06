@@ -3,7 +3,7 @@ name: enrich
 description: Enrich people, companies, LinkedIn profiles, verify emails, or search places. Usage: /obul-leads:enrich <query>
 ---
 
-Enrich leads and discover contacts using StableEnrich's x402 API through the Obul proxy.
+Enrich leads and discover contacts using StableEnrich's x402 API.
 
 ## Usage
 
@@ -17,7 +17,7 @@ Enrich leads and discover contacts using StableEnrich's x402 API through the Obu
 
 ## Workflow
 
-1. Check `OBUL_API_KEY` is set
+1. Ensure you are logged in via `obulx login`
 2. Determine intent from the query:
    - Person search (default, or query starts with "person"): use `POST /api/apollo/people-search`
    - Person enrich (query includes an email or "enrich person"): use `POST /api/apollo/people-enrich`
@@ -29,5 +29,5 @@ Enrich leads and discover contacts using StableEnrich's x402 API through the Obu
    - Social enrichment (query starts with "social"): use `POST /api/influencer/enrich-by-social` or `enrich-by-email`
    - People lookup (query starts with "whitepages" or "lookup person"): use `POST /api/whitepages/person-search`
    - Place search (query starts with "place" or "places"): use `POST /api/google-maps/text-search/full`
-3. Send the request through `https://proxy.obul.ai/proxy/https/stableenrich.dev{path}`
+3. Send the request through `https://stableenrich.dev{path}` using obulx
 4. Display results in a readable format with key fields highlighted

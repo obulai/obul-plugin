@@ -25,9 +25,9 @@ Choose the service based on what the user needs:
 
 ## Workflow
 
-1. Check that `OBUL_API_KEY` is set
+1. Ensure you are logged in via `obulx login`
 2. Select the best service based on the prompt and any user preferences
-3. Send the request through the Obul proxy
+3. Send the request via obulx
 4. Display the result — show the image URL or save the image file
 5. Mention which service was used and the approximate cost
 
@@ -36,29 +36,23 @@ Choose the service based on what the user needs:
 For a general prompt like "a cat sitting on a cloud":
 
 ```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
+obulx -X POST -H "Content-Type: application/json" \
   -d '{"prompt": "a cat sitting on a cloud"}' \
-  "https://proxy.obul.ai/proxy/https/x402engine.app/api/image/fast"
+  "https://x402engine.app/api/image/fast"
 ```
 
 For a high-quality request:
 
 ```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
+obulx -X POST -H "Content-Type: application/json" \
   -d '{"prompt": "a cat sitting on a cloud, photorealistic, studio lighting"}' \
-  "https://proxy.obul.ai/proxy/https/x402engine.app/api/image/quality"
+  "https://x402engine.app/api/image/quality"
 ```
 
 For a Freepik Mystic request with style controls:
 
 ```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
+obulx -X POST -H "Content-Type: application/json" \
   -d '{"prompt": "a cat sitting on a cloud", "model": "realism", "resolution": "4k", "aspect_ratio": "widescreen_16_9"}' \
-  "https://proxy.obul.ai/proxy/https/api.freepik.com/v1/x402/ai/mystic"
+  "https://api.freepik.com/v1/x402/ai/mystic"
 ```

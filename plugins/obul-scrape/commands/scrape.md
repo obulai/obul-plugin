@@ -53,7 +53,7 @@ Choose the provider based on what the user needs:
 
 ## Workflow
 
-1. Check that `OBUL_API_KEY` is set (see setup rule)
+1. Ensure you are logged in via `obulx login` (see setup rule)
 2. Determine which provider best fits the request using the guide above
 3. If ambiguous, default to **x402engine-web** for simple scrapes or **Firecrawl** for anything more complex
 4. Execute the request through the Obul proxy

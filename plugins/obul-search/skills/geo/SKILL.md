@@ -5,9 +5,6 @@ homepage: https://geo.x402endpoints.com
 metadata:
   obul-skill:
     emoji: "📊"
-    requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
 registries: {}
 ---
 
@@ -33,10 +30,8 @@ Track how your brand appears across AI search engines — ChatGPT, Perplexity, G
 Fan out a prompt to multiple LLMs and get a full visibility report: mentions, paragraph position, sentiment, citations with linked URLs, competitor analysis, and share of voice.
 
 **Request:**
-```bash
-curl -sS -X POST \
-  -H "Content-Type: application/json" \
-  -H "x-obul-api-key: ${OBUL_API_KEY}" \
+```sh
+obulx -X POST -H "Content-Type: application/json" \
   -d '{
     "prompt": "What is the best project management tool for startups?",
     "brand": "Linear",
@@ -44,7 +39,7 @@ curl -sS -X POST \
     "competitors": ["Jira", "Asana", "Monday"],
     "models": ["perplexity", "openai", "gemini", "claude", "grok"]
   }' \
-  "https://proxy.obul.ai/proxy/https/geo.x402endpoints.com/v1/visibility/check"
+  "https://geo.x402endpoints.com/v1/visibility/check"
 ```
 
 **Parameters:**
@@ -122,16 +117,14 @@ curl -sS -X POST \
 Generate AI-powered prompt suggestions that would lead to brand mentions. Useful for content strategy and GEO optimization.
 
 **Request:**
-```bash
-curl -sS -X POST \
-  -H "Content-Type: application/json" \
-  -H "x-obul-api-key: ${OBUL_API_KEY}" \
+```sh
+obulx -X POST -H "Content-Type: application/json" \
   -d '{
     "url": "https://linear.app",
     "brand": "Linear",
     "stage": "consideration"
   }' \
-  "https://proxy.obul.ai/proxy/https/geo.x402endpoints.com/v1/prompts/suggest"
+  "https://geo.x402endpoints.com/v1/prompts/suggest"
 ```
 
 **Parameters:**
@@ -164,17 +157,15 @@ curl -sS -X POST \
 Fetch and analyze citation URLs for content quality metrics — word count, entity density, structured data, and freshness.
 
 **Request:**
-```bash
-curl -sS -X POST \
-  -H "Content-Type: application/json" \
-  -H "x-obul-api-key: ${OBUL_API_KEY}" \
+```sh
+obulx -X POST -H "Content-Type: application/json" \
   -d '{
     "urls": [
       "https://linear.app/blog/post-1",
       "https://example.com/linear-review"
     ]
   }' \
-  "https://proxy.obul.ai/proxy/https/geo.x402endpoints.com/v1/citations/analyze"
+  "https://geo.x402endpoints.com/v1/citations/analyze"
 ```
 
 **Parameters:**
@@ -222,7 +213,7 @@ curl -sS -X POST \
 | Error | Cause | Solution |
 |---|---|---|
 | `400` | Missing required fields (`prompt`, `brand`, `url`, `urls`) | Check request body |
-| `402` | No payment header or insufficient USDC balance | Ensure `x-obul-api-key` is set and funded |
+| `402` | No payment or insufficient balance | Verify your account has sufficient balance at my.obul.ai. Run `obulx login` if not authenticated. |
 | `429` | Rate limit exceeded | Wait and retry after `Retry-After` header value |
 | `502` | Upstream LLM failed | Retry; check `errors` array for per-model failures |
 | `503` | Service misconfigured | Contact service operator |

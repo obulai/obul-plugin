@@ -22,15 +22,10 @@ Convert text to speech using OpenAI or ElevenLabs voices, or transcribe audio fi
 - **Pricing**: $0.01 per request
 
 **Request:**
-```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "text": "Hello, this is a test of text-to-speech generation.",
-    "voice": "alloy"
-  }' \
-  "https://proxy.obul.ai/proxy/https/x402engine.app/api/tts/openai" \
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"text": "Hello, this is a test of text-to-speech generation.", "voice": "alloy"}' \
+  "https://x402engine.app/api/tts/openai" \
   -o output.mp3
 ```
 
@@ -46,15 +41,10 @@ curl -sS -X POST \
 - **Pricing**: $0.02 per request
 
 **Request:**
-```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "text": "Welcome to the future of AI-generated speech.",
-    "voice": "rachel"
-  }' \
-  "https://proxy.obul.ai/proxy/https/x402engine.app/api/tts/elevenlabs" \
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"text": "Welcome to the future of AI-generated speech.", "voice": "rachel"}' \
+  "https://x402engine.app/api/tts/elevenlabs" \
   -o output.mp3
 ```
 
@@ -68,12 +58,10 @@ curl -sS -X POST \
 - **Pricing**: $0.10 per request
 
 **Request:**
-```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: multipart/form-data" \
+```sh
+obulx -X POST -H "Content-Type: multipart/form-data" \
   -F "file=@recording.mp3" \
-  "https://proxy.obul.ai/proxy/https/x402engine.app/api/transcribe"
+  "https://x402engine.app/api/transcribe"
 ```
 
 **Response:** JSON with transcribed text, speaker diarization labels, and timestamps.

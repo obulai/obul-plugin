@@ -5,9 +5,6 @@ homepage: https://www.slamai.xyz
 metadata:
   obul-skill:
     emoji: "💰"
-    requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
 registries: {}
 ---
 
@@ -20,20 +17,16 @@ Obul proxy, each request is paid individually with no SlamAI account required.
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
+All requests use the `obulx` CLI, which handles proxy routing and authentication automatically.
 
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+Install and log in (one-time setup):
+
+```sh
+npm install -g @obul.ai/obulx
+obulx login
 ```
 
-Base URL: `https://proxy.obul.ai/proxy/https/api.slamai.dev`
-
-To get an Obul API key, sign up at **https://my.obul.ai**.
+Base URL: `https://api.slamai.dev`
 
 ## Common Operations
 
@@ -44,15 +37,8 @@ ETH, or BTC.
 
 **Pricing:** $0.0001
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/api.slamai.dev/token/price?blockchain=ethereum&symbols=ETH,USDC&quote_symbol=USD",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://api.slamai.dev/token/price?blockchain=ethereum&symbols=ETH,USDC&quote_symbol=USD"
 ```
 
 **Response:** JSON object with current price, FDV, liquidity, and 24h price change for each requested token.
@@ -64,15 +50,8 @@ money wallets based on IQ score, reputation tier, and historical performance.
 
 **Pricing:** $0.003
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/api.slamai.dev/token/trades/dna?blockchain=base&token_address=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&num=20",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://api.slamai.dev/token/trades/dna?blockchain=base&token_address=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&num=20"
 ```
 
 **Response:** JSON array of trades with wallet address, side (buy/sell), amount, price, and WalletDNA enrichment
@@ -85,15 +64,8 @@ win rate, and behavioral classification.
 
 **Pricing:** $0.001
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/api.slamai.dev/wallet/reputation/full?blockchain=ethereum&wallet_address=0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://api.slamai.dev/wallet/reputation/full?blockchain=ethereum&wallet_address=0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
 ```
 
 **Response:** JSON object with wallet IQ score, reputation tier (e.g., "Smart Money", "Veteran", "Newcomer"), total
@@ -105,15 +77,8 @@ Retrieve currently trending tokens on a specific blockchain, ranked by smart mon
 
 **Pricing:** $0.0005
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/api.slamai.dev/chain/tokens/trending?blockchain=base&num=20",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://api.slamai.dev/chain/tokens/trending?blockchain=base&num=20"
 ```
 
 **Response:** JSON array of trending tokens with symbol, name, address, price, volume, and smart money activity score.
@@ -125,15 +90,8 @@ money wallets.
 
 **Pricing:** $0.001
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/api.slamai.dev/token/transfers/dna?blockchain=ethereum&token_address=0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48&num=20",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://api.slamai.dev/token/transfers/dna?blockchain=ethereum&token_address=0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48&num=20"
 ```
 
 **Response:** JSON array of transfers with sender, receiver, amount, direction, and WalletDNA enrichment for each
@@ -200,7 +158,7 @@ wallet involved.
 
 | Error                      | Cause                                    | Solution                                                                                  |
 |----------------------------|------------------------------------------|-------------------------------------------------------------------------------------------|
-| `402 Payment Required`     | Payment not processed or insufficient    | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai.  |
+| `402 Payment Required`     | Payment not processed or insufficient    | Verify your account has sufficient balance at my.obul.ai. Run `obulx login` if not authenticated. |
 | `400 Bad Request`          | Missing or invalid query parameters      | Ensure required params (blockchain, token_address or symbols) are present.                |
 | `404 Not Found`            | Token or wallet not found                | Verify the token address or wallet address exists on the specified blockchain.             |
 | `422 Unprocessable Entity` | Invalid parameter combination            | Check that blockchain is "ethereum" or "base" and addresses are valid.                    |

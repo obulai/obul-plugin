@@ -22,14 +22,10 @@ Generate AI images using x402engine's pay-per-call endpoints. Choose between fas
 - **Pricing**: $0.015 per request
 
 **Request:**
-```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "prompt": "A serene mountain landscape at dawn with mist in the valleys"
-  }' \
-  "https://proxy.obul.ai/proxy/https/x402engine.app/api/image/fast"
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"prompt": "A serene mountain landscape at dawn with mist in the valleys"}' \
+  "https://x402engine.app/api/image/fast"
 ```
 
 **Response:** Returns the generated image data (PNG/JPEG). The response body contains the image binary or a JSON object with an image URL, depending on the endpoint version.
@@ -42,14 +38,10 @@ curl -sS -X POST \
 - **Pricing**: $0.05 per request
 
 **Request:**
-```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "prompt": "Professional product photo of a luxury watch on marble surface, studio lighting"
-  }' \
-  "https://proxy.obul.ai/proxy/https/x402engine.app/api/image/quality"
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"prompt": "Professional product photo of a luxury watch on marble surface, studio lighting"}' \
+  "https://x402engine.app/api/image/quality"
 ```
 
 **Response:** Returns a higher-quality generated image. Slower than `/fast` but significantly better detail and coherence.
@@ -62,14 +54,10 @@ curl -sS -X POST \
 - **Pricing**: $0.12 per request
 
 **Request:**
-```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "prompt": "A neon sign that reads OPEN 24 HOURS on a dark brick wall"
-  }' \
-  "https://proxy.obul.ai/proxy/https/x402engine.app/api/image/text"
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"prompt": "A neon sign that reads OPEN 24 HOURS on a dark brick wall"}' \
+  "https://x402engine.app/api/image/text"
 ```
 
 **Response:** Returns an image with accurately rendered text. Best for logos, signs, and typography.
