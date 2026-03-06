@@ -53,7 +53,7 @@ claude plugin install obul-core obul-scrape obul-search obul-social obul-crypto 
 | `/obul-scrape:scrape <url>` | scrape | Scrape a webpage | $0.001 |
 | `/obul-scrape:screenshot <url>` | scrape | Screenshot a webpage | $0.01 |
 | `/obul-search:search <query>` | search | Search the web | $0.002 |
-| `/obul-social:x-search <query>` | social | Search X/Twitter | $0.001 |
+| `/obul-social:x-search <query>` | social | Search X/Twitter | $0.0025–$0.01 |
 | `/obul-social:farcaster <query>` | social | Search Farcaster | $0.01 |
 | `/obul-crypto:price <coin>` | crypto | Get crypto prices | $0.01 |
 | `/obul-crypto:wallet <address>` | crypto | Look up wallet info | $0.001 |

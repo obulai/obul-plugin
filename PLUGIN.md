@@ -55,7 +55,7 @@ claude plugin install obul-scrape obul-search
 ### obul-social — Social Media
 | Skill | Description | Pricing |
 |---|---|---|
-| x-search | X/Twitter search, profiles, tweets, timelines, trends | $0.001 |
+| x-search | X/Twitter search, profiles, tweets, timelines, communities | $0.0025–$0.01 |
 | neynar | Farcaster casts, profiles, channels, feeds | ~$0.01 |
 | reddit | Reddit search and post comments | $0.02 |
 
