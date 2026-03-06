@@ -5,9 +5,6 @@ homepage: https://x402.heyelsa.ai
 metadata:
   obul-skill:
     emoji: "💰"
-    requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
 registries: {}
 ---
 
@@ -20,20 +17,16 @@ key required.
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
+All requests use the `obulx` CLI, which handles proxy routing and authentication automatically.
 
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+Install and log in (one-time setup):
+
+```sh
+npm install -g @obul.ai/obulx
+obulx login
 ```
 
-Base URL: `https://proxy.obul.ai/proxy/https/x402-api.heyelsa.ai`
-
-To get an Obul API key, sign up at **https://my.obul.ai**.
+Base URL: `https://x402-api.heyelsa.ai`
 
 ## Common Operations
 
@@ -44,18 +37,10 @@ allocation breakdown across chains.
 
 **Pricing:** $0.01
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402-api.heyelsa.ai/api/get_portfolio",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "wallet_address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"wallet_address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"}' \
+  "https://x402-api.heyelsa.ai/api/get_portfolio"
 ```
 
 **Response:** JSON object with portfolio breakdown including token balances, USD values, allocation percentages, and
@@ -67,18 +52,10 @@ Retrieve real-time pricing data for a token including price, market cap, volume,
 
 **Pricing:** $0.002
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402-api.heyelsa.ai/api/get_token_price",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "token": "ETH"
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"token": "ETH"}' \
+  "https://x402-api.heyelsa.ai/api/get_token_price"
 ```
 
 **Response:** JSON object with current price, market cap, 24h volume, and price change data.
@@ -89,25 +66,10 @@ Execute a token swap across chains with optimal routing. Use `dry_run: true` to 
 
 **Pricing:** $0.02
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402-api.heyelsa.ai/api/execute_swap",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "from_chain": "ethereum",
-    "from_token": "ETH",
-    "from_amount": "0.1",
-    "to_chain": "ethereum",
-    "to_token": "USDC",
-    "wallet_address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
-    "slippage": 0.5,
-    "dry_run": true
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"from_chain": "ethereum", "from_token": "ETH", "from_amount": "0.1", "to_chain": "ethereum", "to_token": "USDC", "wallet_address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045", "slippage": 0.5, "dry_run": true}' \
+  "https://x402-api.heyelsa.ai/api/execute_swap"
 ```
 
 **Response:** JSON object with swap quote including expected output amount, price impact, route details, and gas
@@ -119,22 +81,10 @@ Get optimal swap routing and pricing without executing the trade. Useful for com
 
 **Pricing:** $0.01
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402-api.heyelsa.ai/api/get_swap_quote",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "from_chain": "ethereum",
-    "from_token": "ETH",
-    "from_amount": "1.0",
-    "to_chain": "base",
-    "to_token": "USDC"
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"from_chain": "ethereum", "from_token": "ETH", "from_amount": "1.0", "to_chain": "base", "to_token": "USDC"}' \
+  "https://x402-api.heyelsa.ai/api/get_swap_quote"
 ```
 
 **Response:** JSON object with optimal route, expected output, price impact, estimated gas, and fees.
@@ -146,18 +96,10 @@ scoring.
 
 **Pricing:** $0.02
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402-api.heyelsa.ai/api/analyze_wallet",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "wallet_address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"wallet_address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"}' \
+  "https://x402-api.heyelsa.ai/api/analyze_wallet"
 ```
 
 **Response:** JSON object with wallet risk score, behavioral classification, transaction frequency, DeFi protocol
@@ -216,7 +158,7 @@ exposure, and historical activity summary.
 
 | Error                      | Cause                                    | Solution                                                                                  |
 |----------------------------|------------------------------------------|-------------------------------------------------------------------------------------------|
-| `402 Payment Required`     | Payment not processed or insufficient    | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai.  |
+| `402 Payment Required`     | Payment not processed or insufficient    | Verify your account has sufficient balance at my.obul.ai. Run `obulx login` if not authenticated. |
 | `400 Bad Request`          | Missing or invalid request body          | Ensure required fields (wallet_address, token, etc.) are present and correctly typed.     |
 | `404 Not Found`            | Token or wallet not found                | Verify the token symbol or wallet address is correct and on a supported chain.            |
 | `422 Unprocessable Entity` | Valid request but cannot process          | Check that chain names and token symbols match supported values.                          |

@@ -5,9 +5,6 @@ homepage: https://x402engine.app
 metadata:
   obul-skill:
     emoji: "⚡"
-    requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
 registries: {}
 ---
 
@@ -19,20 +16,16 @@ account or API key required.
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
+All requests use the `obulx` CLI, which handles proxy routing and authentication automatically.
 
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+Install and log in (one-time setup):
+
+```sh
+npm install -g @obul.ai/obulx
+obulx login
 ```
 
-Base URL: `https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app`
-
-To get an Obul API key, sign up at **https://my.obul.ai**.
+Base URL: `https://x402-gateway-production.up.railway.app`
 
 ## Common Operations
 
@@ -43,15 +36,8 @@ well-structured markdown extracted from the page.
 
 **Pricing:** $0.005
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/web/scrape?url=https://example.com/page",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://x402-gateway-production.up.railway.app/api/web/scrape?url=https://example.com/page"
 ```
 
 **Response:** JSON object with the scraped URL and clean markdown content extracted from the page.
@@ -63,15 +49,8 @@ image.
 
 **Pricing:** $0.01
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/web/screenshot?url=https://example.com/page",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://x402-gateway-production.up.railway.app/api/web/screenshot?url=https://example.com/page"
 ```
 
 **Response:** JSON object with the URL and a base64-encoded PNG image of the rendered page. Decode the base64 string
@@ -83,18 +62,10 @@ Perform a neural web search with highlighted snippets. Returns relevant results 
 
 **Pricing:** $0.01
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/search/web",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "query": "x402 payment protocol"
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"query": "x402 payment protocol"}' \
+  "https://x402-gateway-production.up.railway.app/api/search/web"
 ```
 
 **Response:** JSON object with search results, each containing title, URL, snippet, and relevance score.
@@ -105,18 +76,10 @@ Extract clean text content from up to 10 URLs in a single request. Useful for ba
 
 **Pricing:** $0.005
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/search/contents",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "urls": ["https://example.com/page1", "https://example.com/page2"]
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"urls": ["https://example.com/page1", "https://example.com/page2"]}' \
+  "https://x402-gateway-production.up.railway.app/api/search/contents"
 ```
 
 **Response:** JSON object with extracted text content for each provided URL.
@@ -154,7 +117,7 @@ Extract clean text content from up to 10 URLs in a single request. Useful for ba
 
 | Error                       | Cause                                    | Solution                                                                                 |
 |-----------------------------|------------------------------------------|------------------------------------------------------------------------------------------|
-| `402 Payment Required`      | Payment not processed or insufficient    | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai. |
+| `402 Payment Required`      | Payment not processed or insufficient    | Verify your account has sufficient balance at my.obul.ai. Run `obulx login` if not authenticated. |
 | `400 Bad Request`           | Missing or invalid `url` parameter       | Ensure the `url` query parameter is present and is a valid URL.                          |
 | `422 Unprocessable Entity`  | URL cannot be scraped or screenshotted   | The target URL may be inaccessible. Try a different URL.                                 |
 | `429 Too Many Requests`     | Rate limit exceeded                      | Add a short delay between requests and avoid rapid-fire calls.                           |

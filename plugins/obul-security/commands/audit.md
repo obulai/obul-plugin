@@ -7,7 +7,7 @@ Run a security audit on the provided target using Orac and optionally BlackSwan.
 
 ## Workflow
 
-1. **Check prerequisites**: Verify `OBUL_API_KEY` is set.
+1. **Check prerequisites**: Ensure you are logged in via `obulx login`.
 
 2. **Determine target type**:
    - If the target is a file path or code snippet, run a **code vulnerability audit** via Orac `/v1/audit`.
@@ -18,29 +18,23 @@ Run a security audit on the provided target using Orac and optionally BlackSwan.
 
    For prompt injection detection:
    ```bash
-   curl -sS -X POST \
-     -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-     -H "Content-Type: application/json" \
+   obulx -X POST -H "Content-Type: application/json" \
      -d '{"input": "<target text>"}' \
-     "https://proxy.obul.ai/proxy/https/orac-safety.orac.workers.dev/v1/scan"
+     "https://orac-safety.orac.workers.dev/v1/scan"
    ```
 
    For code vulnerability audit (read the file first, then send its contents):
    ```bash
-   curl -sS -X POST \
-     -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-     -H "Content-Type: application/json" \
+   obulx -X POST -H "Content-Type: application/json" \
      -d '{"code": "<file contents>", "language": "<detected language>"}' \
-     "https://proxy.obul.ai/proxy/https/orac-safety.orac.workers.dev/v1/audit"
+     "https://orac-safety.orac.workers.dev/v1/audit"
    ```
 
 4. **Optional risk assessment**: If the user requests a broader risk check or the audit target involves crypto/market operations, also call BlackSwan Flare for a quick precursor signal:
    ```bash
-   curl -sS -X POST \
-     -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-     -H "Content-Type: application/json" \
+   obulx -X POST -H "Content-Type: application/json" \
      -d '{}' \
-     "https://proxy.obul.ai/proxy/https/x402.blackswan.wtf/smart-agents/flare"
+     "https://x402.blackswan.wtf/smart-agents/flare"
    ```
 
 5. **Report results**: Display findings with severity levels, risk scores, and remediation suggestions. Summarize the cost of each API call made.

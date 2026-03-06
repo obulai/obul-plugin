@@ -19,11 +19,9 @@ Use Deepgram Nova-3 for transcription with speaker diarization.
 **Cost:** $0.10 per request
 
 ```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: multipart/form-data" \
+obulx -X POST -H "Content-Type: multipart/form-data" \
   -F "file=@recording.mp3" \
-  "https://proxy.obul.ai/proxy/https/x402engine.app/api/transcribe"
+  "https://x402engine.app/api/transcribe"
 ```
 
 The response includes full text, speaker labels, and timestamps. Display the transcription in a readable format.
@@ -42,11 +40,9 @@ Choose the TTS provider based on user preference:
 ### OpenAI TTS
 
 ```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
+obulx -X POST -H "Content-Type: application/json" \
   -d '{"text": "Your text here", "voice": "alloy"}' \
-  "https://proxy.obul.ai/proxy/https/x402engine.app/api/tts/openai" \
+  "https://x402engine.app/api/tts/openai" \
   -o output.mp3
 ```
 
@@ -55,19 +51,17 @@ curl -sS -X POST \
 ### ElevenLabs TTS
 
 ```bash
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
+obulx -X POST -H "Content-Type: application/json" \
   -d '{"text": "Your text here", "voice": "rachel"}' \
-  "https://proxy.obul.ai/proxy/https/x402engine.app/api/tts/elevenlabs" \
+  "https://x402engine.app/api/tts/elevenlabs" \
   -o output.mp3
 ```
 
 ## Workflow
 
-1. Check that `OBUL_API_KEY` is set
+1. Ensure you are logged in via `obulx login`
 2. Detect mode: transcription (file input) or TTS (text input)
-3. Send the request through the Obul proxy
+3. Send the request via obulx
 4. For TTS: save the audio file and tell the user where it was saved
 5. For transcription: display the text with speaker labels if available
 6. Mention the service used and approximate cost

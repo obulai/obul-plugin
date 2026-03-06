@@ -1,36 +1,11 @@
 ---
-name: obul-blackswan
-description: "USE THIS SKILL WHEN: the user wants real-time risk intelligence, market safety signals, precursor detection, or state synthesis. Provides pay-per-use risk intelligence via BlackSwan through the Obul proxy."
-homepage: https://x402.blackswan.wtf
-metadata:
-  obul-skill:
-    emoji: "🦢"
-    requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
-registries: {}
+name: blackswan
+description: Real-time risk intelligence for autonomous AI agents. Use when the user needs market safety signals, precursor detection, or state synthesis for crypto markets.
 ---
 
 # BlackSwan
 
-BlackSwan provides real-time risk intelligence for autonomous AI agents. Monitor prediction markets, derivatives data, social signals, and news to assess whether it is safe to act in crypto markets. No API key needed — payment is handled automatically by the Obul proxy.
-
-## Authentication
-
-All requests route through the Obul proxy. Include your Obul API key in every request:
-
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
-```
-
-Base URL: `https://proxy.obul.ai/proxy/https/x402.blackswan.wtf`
-
-To get an Obul API key, sign up at **https://my.obul.ai**.
+BlackSwan provides real-time risk intelligence for autonomous AI agents. Monitor prediction markets, derivatives data, social signals, and news to assess whether it is safe to act in crypto markets.
 
 ## Common Operations
 
@@ -40,16 +15,11 @@ Get quick risk signals with precursor detection for a short-term window (~15 min
 
 **Pricing:** $0.01
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402.blackswan.wtf/smart-agents/flare",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {}
-}
+**Request:**
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{}' \
+  "https://x402.blackswan.wtf/smart-agents/flare"
 ```
 
 **Response:** JSON object with precursor detection signals covering a ~15-minute window.
@@ -60,16 +30,11 @@ Get comprehensive state synthesis for a longer horizon (~1 hour).
 
 **Pricing:** $0.03
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402.blackswan.wtf/smart-agents/core",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {}
-}
+**Request:**
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{}' \
+  "https://x402.blackswan.wtf/smart-agents/core"
 ```
 
 **Response:** JSON object with comprehensive state synthesis covering up to ~1 hour.
@@ -80,15 +45,9 @@ Get agent metadata including description, capabilities, and pricing.
 
 **Pricing:** $0.00
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/x402.blackswan.wtf/smart-agents/flare",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+**Request:**
+```sh
+obulx "https://x402.blackswan.wtf/smart-agents/flare"
 ```
 
 **Response:** Agent metadata including description, capabilities, and pricing.
@@ -116,9 +75,9 @@ Get agent metadata including description, capabilities, and pricing.
 
 ## Error Handling
 
-| Error                       | Cause                                    | Solution                                                                                  |
-|-----------------------------|------------------------------------------|-------------------------------------------------------------------------------------------|
-| `402 Payment Required`      | Payment not processed or insufficient    | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai.   |
-| `400 Bad Request`           | Invalid request body                    | Ensure the request body is properly formatted.                                            |
-| `429 Too Many Requests`    | Rate limit exceeded                      | Add a short delay between requests.                                                       |
-| `500 Internal Server Error` | BlackSwan service issue                 | Wait a few seconds and retry. If persistent, the service may be experiencing downtime.     |
+| Error                       | Cause                                    | Solution                                                                     |
+|-----------------------------|------------------------------------------|------------------------------------------------------------------------------|
+| `402 Payment Required`      | Payment not processed or insufficient    | Check that `obulx` is configured correctly and your account has balance.     |
+| `400 Bad Request`           | Invalid request body                    | Ensure the request body is properly formatted.                                |
+| `429 Too Many Requests`    | Rate limit exceeded                      | Add a short delay between requests.                                           |
+| `500 Internal Server Error` | BlackSwan service issue                 | Wait a few seconds and retry. If persistent, the service may be experiencing downtime. |

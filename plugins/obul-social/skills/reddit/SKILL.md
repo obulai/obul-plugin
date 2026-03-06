@@ -1,36 +1,11 @@
 ---
-name: obul-reddit
-description: "USE THIS SKILL WHEN: the user wants to search Reddit posts, read post comments, or find discussions on specific topics. Provides pay-per-use Reddit data via StableEnrich through the Obul proxy."
-homepage: https://www.reddit.com
-metadata:
-  obul-skill:
-    emoji: "🔴"
-    requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
-registries: {}
+name: reddit
+description: Search Reddit posts and retrieve comments via StableEnrich. Use when the user wants to find Reddit discussions, read post comments, or research topics on Reddit.
 ---
 
 # Reddit
 
-Reddit provides access to Reddit post search and comment retrieval. Search for Reddit posts by keyword and retrieve full post details with comments. No Reddit API key needed — payment is handled automatically by the Obul proxy.
-
-## Authentication
-
-All requests route through the Obul proxy. Include your Obul API key in every request:
-
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
-```
-
-Base URL: `https://proxy.obul.ai/proxy/https/stableenrich.dev`
-
-To get an Obul API key, sign up at **https://my.obul.ai**.
+Reddit provides access to Reddit post search and comment retrieval. Search for Reddit posts by keyword and retrieve full post details with comments.
 
 ## Common Operations
 
@@ -40,21 +15,11 @@ Search for Reddit posts by keyword with optional sorting and timeframe filters.
 
 **Pricing:** $0.02
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/stableenrich.dev/api/reddit/search",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "query": "rust programming language",
-    "sort": "relevance",
-    "timeframe": "month",
-    "maxResults": 10
-  }
-}
+**Request:**
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"query": "rust programming language", "sort": "relevance", "timeframe": "month", "maxResults": 10}' \
+  "https://stableenrich.dev/api/reddit/search"
 ```
 
 **Response:** JSON array of Reddit posts with truncated previews including title, subreddit, score, comment count, author, and permalink.
@@ -65,18 +30,11 @@ Retrieve full post details and comments for a specific Reddit post.
 
 **Pricing:** $0.02
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/stableenrich.dev/api/reddit/post-comments",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "url": "https://www.reddit.com/r/programming/comments/abc123/example_post/"
-  }
-}
+**Request:**
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"url": "https://www.reddit.com/r/programming/comments/abc123/example_post/"}' \
+  "https://stableenrich.dev/api/reddit/post-comments"
 ```
 
 **Response:** JSON object with the full post details (including untruncated selftext) and a nested comment tree with author, score, and body for each comment.
@@ -105,10 +63,10 @@ Retrieve full post details and comments for a specific Reddit post.
 
 ## Error Handling
 
-| Error                       | Cause                                    | Solution                                                                                  |
-|-----------------------------|------------------------------------------|-------------------------------------------------------------------------------------------|
-| `402 Payment Required`      | Payment not processed or insufficient    | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai.   |
-| `400 Bad Request`           | Missing or invalid request body          | Ensure required fields like `query` or `url` are present.                                  |
-| `404 Not Found`             | Post not found                           | Verify the Reddit URL or search query is correct.                                          |
-| `429 Too Many Requests`    | Rate limit exceeded                      | Add a short delay between requests.                                                       |
-| `500 Internal Server Error` | Reddit service issue                     | Wait a few seconds and retry. If persistent, the service may be experiencing downtime.     |
+| Error                       | Cause                                    | Solution                                                                     |
+|-----------------------------|------------------------------------------|------------------------------------------------------------------------------|
+| `402 Payment Required`      | Payment not processed or insufficient    | Check that `obulx` is configured correctly and your account has balance.     |
+| `400 Bad Request`           | Missing or invalid request body          | Ensure required fields like `query` or `url` are present.                     |
+| `404 Not Found`             | Post not found                           | Verify the Reddit URL or search query is correct.                             |
+| `429 Too Many Requests`    | Rate limit exceeded                      | Add a short delay between requests.                                           |
+| `500 Internal Server Error` | Reddit service issue                     | Wait a few seconds and retry. If persistent, the service may be experiencing downtime. |

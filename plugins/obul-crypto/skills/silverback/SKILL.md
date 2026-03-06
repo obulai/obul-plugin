@@ -5,9 +5,6 @@ homepage: https://x402.silverbackdefi.app
 metadata:
   obul-skill:
     emoji: "💰"
-    requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
 registries: {}
 ---
 
@@ -20,20 +17,16 @@ proxy, each request is paid individually with no Silverback account or API key r
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
+All requests use the `obulx` CLI, which handles proxy routing and authentication automatically.
 
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+Install and log in (one-time setup):
+
+```sh
+npm install -g @obul.ai/obulx
+obulx login
 ```
 
-Base URL: `https://proxy.obul.ai/proxy/https/x402.silverbackdefi.app`
-
-To get an Obul API key, sign up at **https://my.obul.ai**.
+Base URL: `https://x402.silverbackdefi.app`
 
 ## Common Operations
 
@@ -44,15 +37,8 @@ signals. Supports multiple timeframes.
 
 **Pricing:** $0.005
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/x402.silverbackdefi.app/api/v1/technical-analysis?token=ETH&timeframe=4h&chain=ethereum",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://x402.silverbackdefi.app/api/v1/technical-analysis?token=ETH&timeframe=4h&chain=ethereum"
 ```
 
 **Response:** JSON object with RSI value and signal (overbought/oversold), MACD line, signal line, and histogram,
@@ -65,15 +51,8 @@ cross-DEX trades.
 
 **Pricing:** $0.01
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/x402.silverbackdefi.app/api/v1/arbitrage?chain=ethereum&min_profit_pct=0.5",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://x402.silverbackdefi.app/api/v1/arbitrage?chain=ethereum&min_profit_pct=0.5"
 ```
 
 **Response:** JSON array of arbitrage opportunities with token pair, buy DEX, sell DEX, price difference percentage,
@@ -86,15 +65,8 @@ renouncement, liquidity locks, and other risk factors.
 
 **Pricing:** $0.01
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/x402.silverbackdefi.app/api/v1/token-audit?token_address=0x6982508145454Ce325dDbE47a25d4ec3d2311933&chain=ethereum",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://x402.silverbackdefi.app/api/v1/token-audit?token_address=0x6982508145454Ce325dDbE47a25d4ec3d2311933&chain=ethereum"
 ```
 
 **Response:** JSON object with audit results including honeypot detection, mint function status, hidden fee analysis,
@@ -106,15 +78,8 @@ Discover the best DeFi yield opportunities across protocols, filterable by chain
 
 **Pricing:** $0.005
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/x402.silverbackdefi.app/api/v1/yields?chain=ethereum&asset=USDC&min_tvl=1000000",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://x402.silverbackdefi.app/api/v1/yields?chain=ethereum&asset=USDC&min_tvl=1000000"
 ```
 
 **Response:** JSON array of yield opportunities with protocol name, pool, APY, TVL, risk rating, and reward token
@@ -127,15 +92,8 @@ patterns.
 
 **Pricing:** $0.01
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/x402.silverbackdefi.app/api/v1/whale-monitor?token=ETH&chain=ethereum&min_usd=100000",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://x402.silverbackdefi.app/api/v1/whale-monitor?token=ETH&chain=ethereum&min_usd=100000"
 ```
 
 **Response:** JSON object with recent whale transactions, top holders, concentration metrics (Gini coefficient),
@@ -211,7 +169,7 @@ and accumulation/distribution trend signals.
 
 | Error                      | Cause                                    | Solution                                                                                  |
 |----------------------------|------------------------------------------|-------------------------------------------------------------------------------------------|
-| `402 Payment Required`     | Payment not processed or insufficient    | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai.  |
+| `402 Payment Required`     | Payment not processed or insufficient    | Verify your account has sufficient balance at my.obul.ai. Run `obulx login` if not authenticated. |
 | `400 Bad Request`          | Missing or invalid query parameters      | Ensure required params (token, chain, token_address) are present and correctly typed.     |
 | `404 Not Found`            | Token or pool not found                  | Verify the token symbol/address exists on the specified chain.                            |
 | `422 Unprocessable Entity` | Invalid parameter combination            | Check that chain name and timeframe values are supported.                                 |

@@ -5,9 +5,6 @@ homepage: https://pinata.cloud
 metadata:
   obul-skill:
     emoji: "📌"
-    requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
 registries: {}
 ---
 
@@ -19,20 +16,16 @@ API key required. Pin files to the public IPFS network or retrieve privately pin
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
+All requests use the `obulx` CLI, which handles proxy routing and authentication automatically.
 
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+Install and log in (one-time setup):
+
+```sh
+npm install -g @obul.ai/obulx
+obulx login
 ```
 
-Base URL: `https://proxy.obul.ai/proxy/https/402.pinata.cloud`
-
-To get an Obul API key, sign up at **https://my.obul.ai**.
+Base URL: `https://402.pinata.cloud`
 
 ## Common Operations
 
@@ -43,18 +36,10 @@ URL by specifying the file size, then upload the file to the returned URL using 
 
 **Pricing:** $0.10 per GB per year
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/402.pinata.cloud/v1/pin/public",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "fileSize": 1048576
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"fileSize": 1048576}' \
+  "https://402.pinata.cloud/v1/pin/public"
 ```
 
 **Response:** JSON object with a `url` field containing a presigned upload URL. Upload your file to this URL as
@@ -67,18 +52,10 @@ accessible through Pinata's private gateway with proper authorization.
 
 **Pricing:** $0.10 per GB per year
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/402.pinata.cloud/v1/pin/private",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "fileSize": 1048576
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"fileSize": 1048576}' \
+  "https://402.pinata.cloud/v1/pin/private"
 ```
 
 **Response:** JSON object with a `url` field containing a presigned upload URL. Upload your file to this URL as
@@ -91,15 +68,8 @@ file.
 
 **Pricing:** $0.0001
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/402.pinata.cloud/v1/retrieve/private/{cid}",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://402.pinata.cloud/v1/retrieve/private/{cid}"
 ```
 
 **Response:** JSON object with a `url` field containing a temporary presigned URL to access the private file. Use this
@@ -141,9 +111,9 @@ URL to download the file content.
 
 | Error                       | Cause                                    | Solution                                                                                   |
 |-----------------------------|------------------------------------------|--------------------------------------------------------------------------------------------|
-| `402 Payment Required`      | Payment not processed or insufficient    | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai.   |
+| `402 Payment Required`      | Payment not processed or insufficient    | Verify your account has sufficient balance at my.obul.ai. Run `obulx login` if not authenticated. |
 | `400 Bad Request`           | Missing or invalid request body          | Ensure `fileSize` is provided and is a positive integer for pin requests.                  |
-| `401 Unauthorized`          | Invalid or missing authentication        | Check that the `x-obul-api-key` header is present and correct.                             |
+| `401 Unauthorized`          | Invalid or missing authentication        | Run `obulx login` to authenticate.                                                         |
 | `404 Not Found`             | CID does not exist                       | Verify the CID is correct. The file may not have been pinned or may have been unpinned.    |
 | `413 Payload Too Large`     | File exceeds size limits                 | Reduce the file size or split into smaller files before pinning.                           |
 | `500 Internal Server Error` | Upstream Pinata service issue            | Wait a few seconds and retry. If persistent, the service may be experiencing downtime.     |

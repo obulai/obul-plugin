@@ -1,13 +1,16 @@
 # Obul Plugin Marketplace for Claude Code
 
-Pay-per-use API access for Claude Code agents — web scraping, search, social media, crypto, image generation, audio, and security. No external accounts needed, just an `OBUL_API_KEY`.
+Pay-per-use API access for Claude Code agents — web scraping, search, social media, crypto, image generation, audio, and security. No external accounts needed — install `obulx` and log in.
 
 ## Prerequisites
 
-1. Sign up at [my.obul.ai](https://my.obul.ai) (free, ~30 seconds)
-2. Set your API key:
+1. Install the Obul CLI:
    ```sh
-   export OBUL_API_KEY="your-key-here"
+   npm install -g @obul.ai/obulx
+   ```
+2. Log in:
+   ```sh
+   obulx login
    ```
 
 ## Installation
@@ -59,7 +62,6 @@ claude plugin install obul-scrape obul-search
 ### obul-crypto — Blockchain & DeFi
 | Skill | Description | Pricing |
 |---|---|---|
-| coingecko | Crypto prices, on-chain token data, trending pools | $0.01 |
 | heyelsa | DeFi actions — swap, bridge, stake, lend/borrow across chains | $0.001–$0.05 |
 | zapper | Portfolio tracking, NFTs, token balances via GraphQL | $0.003–$0.012 |
 | slamai | Smart money tracking, whale alerts, token analytics | $0.0001–$0.003 |
@@ -75,7 +77,6 @@ claude plugin install obul-scrape obul-search
 | x402engine-image | FLUX Schnell (fast) and FLUX.2 Pro (quality) image gen | $0.015–$0.05 |
 | x402engine-audio | OpenAI TTS, ElevenLabs TTS, Deepgram transcription | $0.01–$0.10 |
 | dtelecom | Speech-to-text transcription via dTelecom | $0.005/min |
-| aibeats | AI music generation with genre, mood, and style control | $0.001–$0.15 |
 | genbase | Video generation with Sora 2 — text-to-video and image-to-video | $0.02–$0.20 |
 
 ### obul-security — Security & Risk
@@ -108,15 +109,11 @@ claude plugin install obul-scrape obul-search
 
 ## How It Works
 
-All requests route through the [Obul proxy](https://obul.ai), which handles [x402](https://www.x402.org/) payment negotiation automatically. You make normal HTTP requests with your `OBUL_API_KEY` — no crypto wallets, no USDC, no gas fees.
-
-```
-https://proxy.obul.ai/proxy/{scheme}/{host}{path}
-```
+All requests route through the [Obul proxy](https://obul.ai) via the `obulx` CLI, which handles [x402](https://www.x402.org/) payment negotiation and authentication automatically. Just pass upstream URLs to `obulx` — no crypto wallets, no USDC, no gas fees.
 
 ## Resources
 
-- [Obul Dashboard](https://my.obul.ai) — manage keys, view usage, set spending caps
+- [Obul Dashboard](https://my.obul.ai) — manage usage and spending caps
 - [x402 Protocol](https://www.x402.org/) — the payment protocol powering Obul
 - [Skill Definitions](plugins/) — full API reference for each service
 

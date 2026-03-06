@@ -15,7 +15,7 @@ Look up token balances and recent transactions for a blockchain wallet address.
 
 ## Workflow
 
-1. Check that `OBUL_API_KEY` is set. If not, tell the user to get one at https://my.obul.ai/.
+1. Ensure you are logged in via `obulx login`. If not, tell the user to run `obulx login`.
 
 2. Detect the address type:
    - Starts with `0x` (42 chars): EVM address (Ethereum, Base, etc.)
@@ -25,49 +25,37 @@ Look up token balances and recent transactions for a blockchain wallet address.
 3. **If ENS name**, resolve to address first:
 
 ```bash
-curl -sS \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/ens/resolve?name={ens_name}"
+obulx "https://x402-gateway-production.up.railway.app/api/ens/resolve?name={ens_name}"
 ```
 
 4. **If EVM address**, fetch balances and transactions:
 
 ```bash
 # Balances
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
+obulx -X POST -H "Content-Type: application/json" \
   -d '{"address": "{address}", "chain": "ethereum"}' \
-  "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/wallet/balances"
+  "https://x402-gateway-production.up.railway.app/api/wallet/balances"
 
 # Recent transactions
-curl -sS -X POST \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  -H "Content-Type: application/json" \
+obulx -X POST -H "Content-Type: application/json" \
   -d '{"address": "{address}", "chain": "ethereum"}' \
-  "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/wallet/transactions"
+  "https://x402-gateway-production.up.railway.app/api/wallet/transactions"
 ```
 
 5. **If Bitcoin address**, fetch UTXOs and ordinals data:
 
 ```bash
-curl -sS \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/api.ordiscan.com/v1/address/{address}/utxos"
+obulx "https://api.ordiscan.com/v1/address/{address}/utxos"
 ```
 
 Optionally also fetch rune and BRC-20 balances:
 
 ```bash
 # Runes
-curl -sS \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/api.ordiscan.com/v1/address/{address}/runes"
+obulx "https://api.ordiscan.com/v1/address/{address}/runes"
 
 # BRC-20
-curl -sS \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/api.ordiscan.com/v1/address/{address}/brc20"
+obulx "https://api.ordiscan.com/v1/address/{address}/brc20"
 ```
 
 6. Display a summary:

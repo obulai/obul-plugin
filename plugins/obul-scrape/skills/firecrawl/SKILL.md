@@ -5,9 +5,6 @@ homepage: https://www.firecrawl.dev
 metadata:
   obul-skill:
     emoji: "🔥"
-    requires:
-      env: [ "OBUL_API_KEY" ]
-      primaryEnv: "OBUL_API_KEY"
 registries: {}
 ---
 
@@ -19,20 +16,16 @@ individually — no Firecrawl account or API key required.
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
+All requests use the `obulx` CLI, which handles proxy routing and authentication automatically.
 
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+Install and log in (one-time setup):
+
+```sh
+npm install -g @obul.ai/obulx
+obulx login
 ```
 
-Base URL: `https://proxy.obul.ai/proxy/https/firecrawl.x402endpoints.com`
-
-To get an Obul API key, sign up at **https://my.obul.ai**.
+Base URL: `https://firecrawl.x402endpoints.com`
 
 ## Common Operations
 
@@ -43,19 +36,10 @@ HTML, raw HTML, links, and screenshot formats.
 
 **Pricing:** $0.001
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/firecrawl.x402endpoints.com/v1/scrape",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "url": "https://example.com",
-    "formats": ["markdown"]
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com", "formats": ["markdown"]}' \
+  "https://firecrawl.x402endpoints.com/v1/scrape"
 ```
 
 **Response:** JSON object with scraped content in the requested formats. The `markdown` format returns clean,
@@ -68,18 +52,10 @@ Discover all URLs on a website. Returns a complete sitemap-style list of pages w
 
 **Pricing:** $0.001
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/firecrawl.x402endpoints.com/v1/map",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "url": "https://example.com"
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com"}' \
+  "https://firecrawl.x402endpoints.com/v1/map"
 ```
 
 **Response:** JSON object with an array of all discovered URLs on the site. Use this to plan targeted scraping or
@@ -92,19 +68,10 @@ determines both the maximum number of pages crawled and the total cost.
 
 **Pricing:** $0.001 per page (total = `limit` × $0.001, max 1000 pages)
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/firecrawl.x402endpoints.com/v1/crawl",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "url": "https://example.com",
-    "limit": 10
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com", "limit": 10}' \
+  "https://firecrawl.x402endpoints.com/v1/crawl"
 ```
 
 **Response:** JSON object with a crawl job `id` and `status`. The crawl runs asynchronously — use the returned job ID
@@ -117,18 +84,10 @@ ideal for pulling specific fields from product pages, articles, or directories.
 
 **Pricing:** $0.001
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/firecrawl.x402endpoints.com/v1/extract",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "urls": ["https://example.com/product/123"]
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"urls": ["https://example.com/product/123"]}' \
+  "https://firecrawl.x402endpoints.com/v1/extract"
 ```
 
 **Response:** JSON object with structured data extracted from the provided URLs. The extraction identifies and returns
@@ -172,7 +131,7 @@ key fields like titles, prices, descriptions, and other structured content from 
 
 | Error                       | Cause                                    | Solution                                                                                   |
 |-----------------------------|------------------------------------------|--------------------------------------------------------------------------------------------|
-| `402 Payment Required`      | Payment not processed or insufficient    | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai.   |
+| `402 Payment Required`      | Payment not processed or insufficient    | Verify your account has sufficient balance at my.obul.ai. Run `obulx login` if not authenticated. |
 | `400 Bad Request`           | Missing or invalid request body          | Ensure required fields (`url`, `query`, `urls`, `limit`) are present and correctly typed.  |
 | `422 Unprocessable Entity`  | Valid request but URL cannot be scraped   | Verify the URL is accessible and not blocked. Try a different URL or format.               |
 | `429 Too Many Requests`     | Rate limit exceeded                      | Add a short delay between requests and avoid rapid-fire calls.                             |

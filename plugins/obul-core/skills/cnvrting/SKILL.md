@@ -5,9 +5,6 @@ homepage: https://cnvrt.ing
 metadata:
   obul-skill:
     emoji: "🔄"
-    requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
 registries: {}
 ---
 
@@ -20,20 +17,16 @@ transcription and image analysis.
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
+All requests use the `obulx` CLI, which handles proxy routing and authentication automatically.
 
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+Install and log in (one-time setup):
+
+```sh
+npm install -g @obul.ai/obulx
+obulx login
 ```
 
-Base URL: `https://proxy.obul.ai/proxy/https/cnvrt.ing`
-
-To get an Obul API key, sign up at **https://my.obul.ai**.
+Base URL: `https://cnvrt.ing`
 
 ## Common Operations
 
@@ -45,20 +38,10 @@ mkv, avi, webm, jpg, png, webp, gif, and bmp.
 
 **Pricing:** $0.00 (free)
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/cnvrt.ing/api/convert",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "url": "https://www.youtube.com/watch?v=VIDEO_ID",
-    "format": "mp3",
-    "quality": "best"
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"url": "https://www.youtube.com/watch?v=VIDEO_ID", "format": "mp3", "quality": "best"}' \
+  "https://cnvrt.ing/api/convert"
 ```
 
 **Response:** JSON object with the converted media file URL. Download the file from the returned URL.
@@ -70,18 +53,10 @@ platform and receive a full text transcription.
 
 **Pricing:** $0.025
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/cnvrt.ing/api/transcribe",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "url": "https://www.youtube.com/watch?v=VIDEO_ID"
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"url": "https://www.youtube.com/watch?v=VIDEO_ID"}' \
+  "https://cnvrt.ing/api/transcribe"
 ```
 
 **Response:** JSON object with the transcribed text content. Includes the full transcription of the audio or video.
@@ -93,18 +68,10 @@ analysis results.
 
 **Pricing:** $0.005
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/cnvrt.ing/api/analyze-image",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "url": "https://example.com/image.png"
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com/image.png"}' \
+  "https://cnvrt.ing/api/analyze-image"
 ```
 
 **Response:** JSON object containing extracted text (OCR) and detected objects from the image.
@@ -116,18 +83,10 @@ and estimating conversion costs.
 
 **Pricing:** $0.00 (free)
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/cnvrt.ing/api/detect-format",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "url": "https://www.youtube.com/watch?v=VIDEO_ID"
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"url": "https://www.youtube.com/watch?v=VIDEO_ID"}' \
+  "https://cnvrt.ing/api/detect-format"
 ```
 
 **Response:** JSON object with the detected format, resolution, duration, and other metadata about the media.
@@ -139,19 +98,10 @@ to a paid request.
 
 **Pricing:** $0.00 (free)
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/cnvrt.ing/api/estimate-cost",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "url": "https://www.youtube.com/watch?v=VIDEO_ID",
-    "operation": "transcribe"
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"url": "https://www.youtube.com/watch?v=VIDEO_ID", "operation": "transcribe"}' \
+  "https://cnvrt.ing/api/estimate-cost"
 ```
 
 **Response:** JSON object with the estimated cost in USDC for the requested operation.
@@ -196,7 +146,7 @@ to a paid request.
 
 | Error                       | Cause                                    | Solution                                                                                   |
 |-----------------------------|------------------------------------------|--------------------------------------------------------------------------------------------|
-| `402 Payment Required`      | Payment not processed or insufficient    | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai.   |
+| `402 Payment Required`      | Payment not processed or insufficient    | Verify your account has sufficient balance at my.obul.ai. Run `obulx login` if not authenticated. |
 | `400 Bad Request`           | Missing or invalid request body          | Ensure `url` is provided and is a valid, accessible URL. Check `format` is supported.      |
 | `404 Not Found`             | URL content not found on platform        | Verify the URL is correct and the content is still available on the source platform.       |
 | `415 Unsupported Media`     | Format not supported for conversion      | Check supported formats. Use `/api/detect-format` to see available options.                |

@@ -1,54 +1,54 @@
 ---
-description: OBUL_API_KEY setup and verification
+description: Obul CLI setup and verification
 ---
 
-# Obul API Key Setup
+# Obul CLI Setup
 
-## Required Environment Variable
+## Install the CLI
 
-All Obul skills require `OBUL_API_KEY` to be set. This key authenticates requests to the Obul proxy, which handles x402 payments automatically.
-
-## Getting Your Key
-
-1. Sign up at [my.obul.ai](https://my.obul.ai) (free, ~30 seconds)
-2. Copy your API key from the dashboard
-
-## Setting the Key
-
-Add to your shell profile (`~/.zshrc`, `~/.bashrc`, or `~/.profile`):
+All Obul skills use the `obulx` CLI, which handles proxy routing and authentication automatically.
 
 ```sh
-export OBUL_API_KEY="your-key-here"
+npm install -g @obul.ai/obulx
 ```
 
-Or set it in `.claude/.env` for Claude Code:
+## Log In
 
+Authenticate via OAuth device flow:
+
+```sh
+obulx login
 ```
-OBUL_API_KEY=your-key-here
-```
+
+Follow the on-screen instructions: visit the URL shown, enter the code, and authorize. Once complete, `obulx` stores your credentials locally — no environment variables needed.
 
 ## Verification
 
-Test your key with a simple request:
+Confirm your identity:
 
 ```sh
-curl -s "https://proxy.obul.ai/proxy/https/firecrawl.x402endpoints.com/v1/scrape" \
-  -H "Content-Type: application/json" \
-  -H "x-obul-api-key: $OBUL_API_KEY" \
-  -d '{"url": "https://example.com", "formats": ["markdown"]}' | head -c 200
+obulx whoami
 ```
 
-A successful response returns JSON with scraped content. If you see an authentication error, verify your key is correct.
+Test with a real request:
+
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com", "formats": ["markdown"]}' \
+  "https://firecrawl.x402endpoints.com/v1/scrape" | head -c 200
+```
+
+A successful response returns JSON with scraped content.
 
 ## Troubleshooting
 
 | Problem | Solution |
 |---|---|
-| `401 Unauthorized` | Check that `OBUL_API_KEY` is set and valid |
+| `401 Unauthorized` | Run `obulx login` to re-authenticate |
 | `402 Payment Required` | Your Obul balance may be depleted — top up at [my.obul.ai](https://my.obul.ai) |
-| `403 Forbidden` | Your scoped key may not have access to this service |
-| `OBUL_API_KEY` not found | Restart your shell or Claude Code after setting the variable |
+| `403 Forbidden` | Your account may not have access to this service |
+| `obulx: command not found` | Run `npm install -g @obul.ai/obulx` to install the CLI |
 
 ## Spending Controls
 
-Obul supports scoped API keys with spending caps. Create restricted keys in the [dashboard](https://my.obul.ai) to limit per-key or per-day spending.
+Obul supports spending caps. Manage your limits in the [dashboard](https://my.obul.ai) to control per-day spending.

@@ -6,31 +6,18 @@ metadata:
   obul-skill:
     emoji: "₿"
     requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
+      env: []
+      primaryEnv: ""
 registries: {}
 ---
 
 # Ordiscan
 
-Ordiscan provides pay-per-request Bitcoin Ordinals and Runes data. Query inscriptions, rune balances, BRC-20 tokens, rare sats, and UTXOs by address. No API key needed — payment is handled automatically by the Obul proxy.
+Ordiscan provides pay-per-request Bitcoin Ordinals and Runes data. Query inscriptions, rune balances, BRC-20 tokens, rare sats, and UTXOs by address. No API key needed — payment is handled automatically via `obulx`.
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
-
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
-```
-
-Base URL: `https://proxy.obul.ai/proxy/https/api.ordiscan.com`
-
-To get an Obul API key, sign up at **https://my.obul.ai**.
+All requests use the `obulx` CLI, which handles x402 payment automatically.
 
 ## Common Operations
 
@@ -40,15 +27,9 @@ Retrieve details about a specific inscription by its ID.
 
 **Pricing:** $0.01
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/api.ordiscan.com/v1/inscription/b61b0172d95e266c18aea0c624db987e971a5d6d4ebc2aaed85da4642d635735i0",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+**Request:**
+```sh
+obulx "https://api.ordiscan.com/v1/inscription/b61b0172d95e266c18aea0c624db987e971a5d6d4ebc2aaed85da4642d635735i0"
 ```
 
 **Response:** JSON with inscription details including content type, content URL, sat number, owner address, and genesis transaction.
@@ -59,15 +40,9 @@ List all inscriptions owned by a Bitcoin address.
 
 **Pricing:** $0.01
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/inscriptions",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+**Request:**
+```sh
+obulx "https://api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/inscriptions"
 ```
 
 **Response:** JSON array of inscription IDs and metadata owned by the address.
@@ -78,15 +53,9 @@ Retrieve UTXOs for a Bitcoin address with ordinals info.
 
 **Pricing:** $0.01
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/utxos",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+**Request:**
+```sh
+obulx "https://api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/utxos"
 ```
 
 **Response:** JSON array of UTXOs with associated inscriptions and runes tied to each output.
@@ -97,15 +66,9 @@ Retrieve rune balances for a Bitcoin address.
 
 **Pricing:** $0.01
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/runes",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+**Request:**
+```sh
+obulx "https://api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/runes"
 ```
 
 **Response:** JSON array of rune balances in the smallest denomination (no decimals).
@@ -116,15 +79,9 @@ Retrieve BRC-20 token balances for a Bitcoin address.
 
 **Pricing:** $0.01
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/brc20",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+**Request:**
+```sh
+obulx "https://api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/brc20"
 ```
 
 **Response:** JSON array of BRC-20 token balances with ticker and amount.
@@ -135,18 +92,25 @@ Find rare sats in a Bitcoin address.
 
 **Pricing:** $0.01
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/rare-sats",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+**Request:**
+```sh
+obulx "https://api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/rare-sats"
 ```
 
 **Response:** JSON array of rare sats with rarity classification and sat number.
+
+### Get Inscription Transfers
+
+Get inscription transfer history for a Bitcoin address.
+
+**Pricing:** $0.01
+
+**Request:**
+```sh
+obulx "https://api.ordiscan.com/v1/address/bc1pxaneaf3w4d27hl2y93fuft2xk6m4u3wc4rafevc6slgd7f5tq2dqyfgy06/transfers"
+```
+
+**Response:** JSON array of inscription transfers for the address.
 
 ## Endpoint Pricing Reference
 
@@ -176,11 +140,15 @@ Find rare sats in a Bitcoin address.
 - **Rune denominations** — Rune balances are returned in the smallest denomination and never have decimals
 - **Combine queries** — Use UTXO endpoint to get comprehensive output data including inscriptions and runes
 
+## Notes
+- All endpoints cost ~$0.01 USDC per request.
+- The `obulx` CLI handles x402 payment automatically -- no USDC wallet or payment header needed.
+
 ## Error Handling
 
 | Error                       | Cause                                    | Solution                                                                                  |
 |-----------------------------|------------------------------------------|-------------------------------------------------------------------------------------------|
-| `402 Payment Required`      | Payment not processed or insufficient    | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai.   |
+| `402 Payment Required`      | Payment not processed or insufficient    | Verify your obulx setup is correct and your account has sufficient balance at my.obul.ai.  |
 | `400 Bad Request`           | Invalid address format                   | Ensure the Bitcoin address is in a valid format.                                           |
 | `404 Not Found`             | Address or inscription not found         | Verify the address or inscription ID is correct.                                           |
 | `429 Too Many Requests`    | Rate limit exceeded                      | Add a short delay between requests.                                                       |

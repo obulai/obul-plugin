@@ -6,31 +6,18 @@ metadata:
   obul-skill:
     emoji: "🔊"
     requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
+      env: []
+      primaryEnv: ""
 registries: {}
 ---
 
 # x402engine Audio
 
-x402engine provides pay-per-call text-to-speech and audio transcription endpoints. Convert text to speech using OpenAI or ElevenLabs voices, or transcribe audio files to text with speaker diarization. No API key needed — payment is handled automatically by the Obul proxy.
+x402engine provides pay-per-call text-to-speech and audio transcription endpoints. Convert text to speech using OpenAI or ElevenLabs voices, or transcribe audio files to text with speaker diarization. No API key needed — payment is handled automatically via `obulx`.
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
-
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
-```
-
-Base URL: `https://proxy.obul.ai/proxy/https/x402engine.app`
-
-To get an Obul API key, sign up at **https://my.obul.ai**.
+All requests use the `obulx` CLI, which handles x402 payment automatically.
 
 ## Common Operations
 
@@ -40,24 +27,19 @@ Generate speech audio from text using OpenAI's TTS models.
 
 **Pricing:** $0.01
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402engine.app/api/tts/openai",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "text": "Hello, this is a test of text-to-speech generation.",
-    "voice": "alloy"
-  }
-}
+**Request:**
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"text": "Hello, this is a test of text-to-speech generation.", "voice": "alloy"}' \
+  "https://x402engine.app/api/tts/openai" \
+  -o output.mp3
 ```
 
-**Available voices:** `alloy`, `echo`, `fable`, `onyx`, `nova`, `shimmer`
+**Voices:** `alloy`, `echo`, `fable`, `onyx`, `nova`, `shimmer`
 
-**Response:** Returns audio data (MP3 or other format). Save to a file with `-o output.mp3`.
+**Response:** Returns audio data (MP3 or other format). Save to a file with `-o filename.mp3`.
+
+---
 
 ### Text-to-Speech (ElevenLabs)
 
@@ -65,22 +47,17 @@ Generate ultra-realistic speech using ElevenLabs voices.
 
 **Pricing:** $0.02
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402engine.app/api/tts/elevenlabs",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "text": "Welcome to the future of AI-generated speech.",
-    "voice": "rachel"
-  }
-}
+**Request:**
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"text": "Welcome to the future of AI-generated speech.", "voice": "rachel"}' \
+  "https://x402engine.app/api/tts/elevenlabs" \
+  -o output.mp3
 ```
 
-**Response:** Returns ultra-realistic audio data. ElevenLabs voices are more natural and expressive but cost 2x more.
+**Response:** Returns ultra-realistic audio data. ElevenLabs voices are more natural and expressive than OpenAI, but cost 2x more.
+
+---
 
 ### Audio Transcription (Deepgram Nova-3)
 
@@ -88,18 +65,11 @@ Transcribe audio files to text with speaker diarization.
 
 **Pricing:** $0.10
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402engine.app/api/transcribe",
-  "headers": {
-    "Content-Type": "multipart/form-data",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "file": "@recording.mp3"
-  }
-}
+**Request:**
+```sh
+obulx -X POST -H "Content-Type: multipart/form-data" \
+  -F "file=@recording.mp3" \
+  "https://x402engine.app/api/transcribe"
 ```
 
 **Response:** JSON with transcribed text, speaker diarization labels, and timestamps.
@@ -132,7 +102,7 @@ Transcribe audio files to text with speaker diarization.
 
 | Error                       | Cause                                    | Solution                                                                                  |
 |-----------------------------|------------------------------------------|-------------------------------------------------------------------------------------------|
-| `402 Payment Required`      | Payment not processed or insufficient    | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai.   |
+| `402 Payment Required`      | Payment not processed or insufficient    | Verify your obulx setup is correct and your account has sufficient balance at my.obul.ai.  |
 | `400 Bad Request`           | Missing or invalid request body          | Ensure `text` is present for TTS or `file` is provided for transcription.                  |
 | `415 Unsupported Media`     | Invalid audio format for transcription  | Ensure the audio file is in a supported format.                                            |
 | `429 Too Many Requests`     | Rate limit exceeded                      | Add a short delay between requests.                                                       |

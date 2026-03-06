@@ -5,9 +5,6 @@ homepage: https://www.firecrawl.dev
 metadata:
   obul-skill:
     emoji: "🔍"
-    requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
 registries: {}
 ---
 
@@ -18,18 +15,16 @@ Through the Obul proxy, each request is paid individually — no Firecrawl accou
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
+All requests use the `obulx` CLI, which handles proxy routing and authentication automatically.
 
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+Install and log in (one-time setup):
+
+```sh
+npm install -g @obul.ai/obulx
+obulx login
 ```
 
-Base URL: `https://proxy.obul.ai/proxy/https/firecrawl.x402endpoints.com`
+Base URL: `https://firecrawl.x402endpoints.com`
 
 ## Common Operations
 
@@ -40,19 +35,10 @@ knowing specific URLs.
 
 **Pricing:** $0.002
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/firecrawl.x402endpoints.com/v1/search",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "query": "firecrawl web scraping API",
-    "limit": 5
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"query": "firecrawl web scraping API", "limit": 5}' \
+  "https://firecrawl.x402endpoints.com/v1/search"
 ```
 
 **Response:** Array of search results, each containing the page URL, title, and scraped content in clean markdown
@@ -65,22 +51,10 @@ elements like navigation.
 
 **Pricing:** $0.002
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/firecrawl.x402endpoints.com/v1/search",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "query": "x402 payment protocol",
-    "limit": 3,
-    "scrapeOptions": {
-      "formats": ["markdown", "links"]
-    }
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"query": "x402 payment protocol", "limit": 3, "scrapeOptions": {"formats": ["markdown", "links"]}}' \
+  "https://firecrawl.x402endpoints.com/v1/search"
 ```
 
 **Response:** Search results with content in the requested formats. The `links` format returns all URLs found on each
@@ -92,20 +66,10 @@ Restrict search results to a specific time period using the `tbs` parameter.
 
 **Pricing:** $0.002
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/firecrawl.x402endpoints.com/v1/search",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "query": "x402 ecosystem news",
-    "tbs": "qdr:w",
-    "lang": "en"
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"query": "x402 ecosystem news", "tbs": "qdr:w", "lang": "en"}' \
+  "https://firecrawl.x402endpoints.com/v1/search"
 ```
 
 **Response:** Search results filtered to the specified time period. `tbs` values: `qdr:h` (past hour), `qdr:d` (past
@@ -135,7 +99,7 @@ day), `qdr:w` (past week), `qdr:m` (past month).
 
 | Error                       | Cause                                    | Solution                                                                                 |
 |-----------------------------|------------------------------------------|------------------------------------------------------------------------------------------|
-| `402 Payment Required`      | Payment not processed or insufficient    | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai. |
+| `402 Payment Required`      | Payment not processed or insufficient    | Verify your account has sufficient balance at my.obul.ai. Run `obulx login` if not authenticated. |
 | `400 Bad Request`           | Missing or invalid request body          | Ensure the `query` field is present and non-empty.                                       |
 | `429 Too Many Requests`     | Rate limit exceeded                      | Add a short delay between requests.                                                      |
 | `500 Internal Server Error` | Upstream Firecrawl service issue         | Wait a few seconds and retry.                                                            |

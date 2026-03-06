@@ -5,9 +5,6 @@ homepage: https://minifetch.com
 metadata:
   obul-skill:
     emoji: "📋"
-    requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
 registries: {}
 ---
 
@@ -19,20 +16,16 @@ Obul proxy, each request is paid individually — no Minifetch account or API ke
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
+All requests use the `obulx` CLI, which handles proxy routing and authentication automatically.
 
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+Install and log in (one-time setup):
+
+```sh
+npm install -g @obul.ai/obulx
+obulx login
 ```
 
-Base URL: `https://proxy.obul.ai/proxy/https/minifetch.com`
-
-To get an Obul API key, sign up at **https://my.obul.ai**.
+Base URL: `https://minifetch.com`
 
 ## Common Operations
 
@@ -43,18 +36,10 @@ hreflang tags, favicons, and robots directives.
 
 **Pricing:** $0.002
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/minifetch.com/api/v1/x402/extract/url-metadata",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "url": "https://example.com/page"
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com/page"}' \
+  "https://minifetch.com/api/v1/x402/extract/url-metadata"
 ```
 
 **Response:** JSON object with extracted metadata: `title`, `description`, `image`, `url`, `lang`, `favicons`,
@@ -68,20 +53,10 @@ metadata field and the raw page content.
 
 **Pricing:** $0.002
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/minifetch.com/api/v1/x402/extract/url-metadata",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "url": "https://example.com/page",
-    "verbosity": "full",
-    "includeResponseBody": true
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com/page", "verbosity": "full", "includeResponseBody": true}' \
+  "https://minifetch.com/api/v1/x402/extract/url-metadata"
 ```
 
 **Response:** JSON object with all metadata fields plus the full HTML response body. The `verbosity: "full"` flag
@@ -94,18 +69,10 @@ link analysis, and crawl planning.
 
 **Pricing:** $0.002
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/minifetch.com/api/v1/x402/extract/url-links",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "url": "https://example.com/page"
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com/page"}' \
+  "https://minifetch.com/api/v1/x402/extract/url-links"
 ```
 
 **Response:** JSON object with the source URL and a `links` array containing all discovered URLs on the page.
@@ -117,15 +84,8 @@ and does not require x402 payment.
 
 **Pricing:** $0.00
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/minifetch.com/api/v1/free/preflight/url-check?url=https://example.com/page",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://minifetch.com/api/v1/free/preflight/url-check?url=https://example.com/page"
 ```
 
 **Response:** JSON object indicating whether the URL is accessible and compliant with robots.txt.
@@ -163,7 +123,7 @@ and does not require x402 payment.
 
 | Error                       | Cause                                    | Solution                                                                                 |
 |-----------------------------|------------------------------------------|------------------------------------------------------------------------------------------|
-| `402 Payment Required`      | Payment not processed or insufficient    | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai. |
+| `402 Payment Required`      | Payment not processed or insufficient    | Verify your account has sufficient balance at my.obul.ai. Run `obulx login` if not authenticated. |
 | `400 Bad Request`           | Missing or invalid `url` in request body | Ensure the `url` field is present and is a valid URL.                                    |
 | `403 Forbidden`             | URL blocked by robots.txt                | Use the free preflight check first. Choose a different URL that allows scraping.         |
 | `422 Unprocessable Entity`  | URL cannot be fetched                    | The target URL may be down or require authentication. Minifetch cannot access login-gated pages. |

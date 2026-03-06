@@ -5,9 +5,6 @@ homepage: https://www.zyte.com/zyte-api
 metadata:
   obul-skill:
     emoji: "🛡️"
-    requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
 registries: {}
 ---
 
@@ -19,20 +16,16 @@ account or API key required. Use Zyte when other scrapers fail due to bot detect
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
+All requests use the `obulx` CLI, which handles proxy routing and authentication automatically.
 
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+Install and log in (one-time setup):
+
+```sh
+npm install -g @obul.ai/obulx
+obulx login
 ```
 
-Base URL: `https://proxy.obul.ai/proxy/https/api-x402.zyte.com`
-
-To get an Obul API key, sign up at **https://my.obul.ai**.
+Base URL: `https://api-x402.zyte.com`
 
 ## Common Operations
 
@@ -43,19 +36,10 @@ returned Base64-encoded.
 
 **Pricing:** $0.08 per 1000 URLs (~$0.00008 per request)
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/api-x402.zyte.com/v1/extract",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "url": "https://example.com/page",
-    "httpResponseBody": true
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com/page", "httpResponseBody": true}' \
+  "https://api-x402.zyte.com/v1/extract"
 ```
 
 **Response:** JSON object with the URL, status code, and `httpResponseBody` as a Base64-encoded string. Decode the
@@ -68,19 +52,10 @@ content via JavaScript.
 
 **Pricing:** $0.28 per 1000 URLs (~$0.00028 per request)
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/api-x402.zyte.com/v1/extract",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "url": "https://example.com/spa-page",
-    "browserHtml": true
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com/spa-page", "browserHtml": true}' \
+  "https://api-x402.zyte.com/v1/extract"
 ```
 
 **Response:** JSON object with the URL, status code, and `browserHtml` containing the fully rendered HTML including
@@ -92,19 +67,10 @@ Capture a screenshot of the rendered page. Requires browser rendering. Useful fo
 
 **Pricing:** $0.28 per 1000 URLs (~$0.00028 per request)
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/api-x402.zyte.com/v1/extract",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "url": "https://example.com/page",
-    "screenshot": true
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com/page", "screenshot": true}' \
+  "https://api-x402.zyte.com/v1/extract"
 ```
 
 **Response:** JSON object with a Base64-encoded screenshot image of the rendered page.
@@ -116,22 +82,10 @@ e-commerce pages.
 
 **Pricing:** $0.76 per 1000 URLs (~$0.00076 per request)
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/api-x402.zyte.com/v1/extract",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "url": "https://example.com/product/123",
-    "product": true,
-    "productOptions": {
-      "extractFrom": "browserHtml"
-    }
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com/product/123", "product": true, "productOptions": {"extractFrom": "browserHtml"}}' \
+  "https://api-x402.zyte.com/v1/extract"
 ```
 
 **Response:** JSON object with a `product` field containing structured data: `name`, `price`, `currency`,
@@ -143,19 +97,10 @@ Use Zyte's AI to automatically extract structured article data (title, body, aut
 
 **Pricing:** $0.76 per 1000 URLs (~$0.00076 per request)
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/api-x402.zyte.com/v1/extract",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "url": "https://example.com/blog/article",
-    "article": true
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com/blog/article", "article": true}' \
+  "https://api-x402.zyte.com/v1/extract"
 ```
 
 **Response:** JSON object with an `article` field containing structured data: `headline`, `articleBody`, `author`,
@@ -196,7 +141,7 @@ Use Zyte's AI to automatically extract structured article data (title, body, aut
 
 | Error                       | Cause                                    | Solution                                                                                 |
 |-----------------------------|------------------------------------------|------------------------------------------------------------------------------------------|
-| `402 Payment Required`      | Payment not processed or insufficient    | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai. |
+| `402 Payment Required`      | Payment not processed or insufficient    | Verify your account has sufficient balance at my.obul.ai. Run `obulx login` if not authenticated. |
 | `400 Bad Request`           | Missing or invalid request body          | Ensure `url` is present and at least one output flag is set (e.g., `httpResponseBody`).  |
 | `422 Unprocessable Entity`  | URL cannot be scraped                    | The target URL may be down or completely blocking all access. Try a different approach.   |
 | `429 Too Many Requests`     | Rate limit exceeded                      | Add a short delay between requests and avoid rapid-fire calls.                           |

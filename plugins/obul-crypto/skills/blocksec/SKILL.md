@@ -5,9 +5,6 @@ homepage: https://x402.blocksec.ai
 metadata:
   obul-skill:
     emoji: "💰"
-    requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
 registries: {}
 ---
 
@@ -21,20 +18,16 @@ individually with no BlockSec account or API key required.
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
+All requests use the `obulx` CLI, which handles proxy routing and authentication automatically.
 
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+Install and log in (one-time setup):
+
+```sh
+npm install -g @obul.ai/obulx
+obulx login
 ```
 
-Base URL: `https://proxy.obul.ai/proxy/https/x402.blocksec.ai`
-
-To get an Obul API key, sign up at **https://my.obul.ai**.
+Base URL: `https://x402.blocksec.ai`
 
 ## Common Operations
 
@@ -45,15 +38,8 @@ and other labeled entities. Useful for understanding who owns or controls an add
 
 **Pricing:** $0.10
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/x402.blocksec.ai/label/eth/0x463452c356322d463b84891ebda33daed274cb40",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://x402.blocksec.ai/label/eth/0x463452c356322d463b84891ebda33daed274cb40"
 ```
 
 **Response:** JSON object with entity name (e.g., "Binance"), category (e.g., "Exchange"), subcategories, and
@@ -66,15 +52,8 @@ including interactions with sanctioned or suspicious wallets. Ideal for fast pre
 
 **Pricing:** $0.20
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/x402.blocksec.ai/screen/light/eth/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://x402.blocksec.ai/screen/light/eth/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
 ```
 
 **Response:** JSON object with risk score (0-100), risk level (low/medium/high/critical), sanctioned entity
@@ -87,15 +66,8 @@ fund source tracing, and entity relationship mapping. This is the most thorough 
 
 **Pricing:** $1.00
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/x402.blocksec.ai/screen/deep/tron/TYXqLb9ZyAeJeTFkt3Tx7kNyc3HufjvnMs",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://x402.blocksec.ai/screen/deep/tron/TYXqLb9ZyAeJeTFkt3Tx7kNyc3HufjvnMs"
 ```
 
 **Response:** JSON object with comprehensive KYA report including risk score, detailed risk breakdown, fund source
@@ -142,7 +114,7 @@ analysis, transaction flow mapping, sanctioned entity exposure, counterparty ana
 
 | Error                      | Cause                                    | Solution                                                                                  |
 |----------------------------|------------------------------------------|-------------------------------------------------------------------------------------------|
-| `402 Payment Required`     | Payment not processed or insufficient    | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai.  |
+| `402 Payment Required`     | Payment not processed or insufficient    | Verify your account has sufficient balance at my.obul.ai. Run `obulx login` if not authenticated. |
 | `400 Bad Request`          | Invalid chain or address format          | Ensure the chain parameter is valid (eth, bsc, tron, etc.) and the address is correctly formatted. |
 | `404 Not Found`            | Unsupported chain                        | Verify the chain is in the supported list: eth, bsc, tron, polygon, arbitrum, base, optimism. |
 | `422 Unprocessable Entity` | Valid request but cannot process          | The address format may not match the specified chain (e.g., 0x address for Tron).         |

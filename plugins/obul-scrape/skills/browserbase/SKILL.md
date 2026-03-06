@@ -5,9 +5,6 @@ homepage: https://www.browserbase.com
 metadata:
   obul-skill:
     emoji: "🌐"
-    requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
 registries: {}
 ---
 
@@ -20,20 +17,16 @@ Puppeteer for full browser automation.
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
+All requests use the `obulx` CLI, which handles proxy routing and authentication automatically.
 
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+Install and log in (one-time setup):
+
+```sh
+npm install -g @obul.ai/obulx
+obulx login
 ```
 
-Base URL: `https://proxy.obul.ai/proxy/https/x402.browserbase.com`
-
-To get an Obul API key, sign up at **https://my.obul.ai**.
+Base URL: `https://x402.browserbase.com`
 
 ## Common Operations
 
@@ -44,16 +37,10 @@ Puppeteer for full browser automation including navigation, clicking, typing, an
 
 **Pricing:** $0.01 (5-minute session)
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402.browserbase.com/browser/session/create",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {}
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{}' \
+  "https://x402.browserbase.com/browser/session/create"
 ```
 
 **Response:** JSON object containing a `wsUrl` field with the WebSocket endpoint to connect your Playwright or
@@ -66,15 +53,8 @@ a session is still alive before reconnecting.
 
 **Pricing:** $0.0001
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/x402.browserbase.com/browser/session/{id}/status",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://x402.browserbase.com/browser/session/{id}/status"
 ```
 
 **Response:** JSON object with the session's current status, including whether it is active, idle, or terminated, and
@@ -87,16 +67,10 @@ more than the default 5-minute window.
 
 **Pricing:** $0.01 per additional 5 minutes
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402.browserbase.com/browser/session/{id}/extend",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {}
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{}' \
+  "https://x402.browserbase.com/browser/session/{id}/extend"
 ```
 
 **Response:** JSON object confirming the session has been extended, with the new expiration time.
@@ -107,15 +81,8 @@ Close and terminate a browser session when you are done. This releases resources
 
 **Pricing:** $0.0001
 
-```json
-{
-  "method": "DELETE",
-  "url": "https://proxy.obul.ai/proxy/https/x402.browserbase.com/browser/session/{id}",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx -X DELETE "https://x402.browserbase.com/browser/session/{id}"
 ```
 
 **Response:** JSON object confirming the session has been terminated.
@@ -158,7 +125,7 @@ Close and terminate a browser session when you are done. This releases resources
 
 | Error                       | Cause                                    | Solution                                                                                   |
 |-----------------------------|------------------------------------------|--------------------------------------------------------------------------------------------|
-| `402 Payment Required`      | Payment not processed or insufficient    | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai.   |
+| `402 Payment Required`      | Payment not processed or insufficient    | Verify your account has sufficient balance at my.obul.ai. Run `obulx login` if not authenticated. |
 | `400 Bad Request`           | Invalid request format                   | Check the request body and URL format. Ensure the session ID is valid for status/extend.   |
 | `404 Not Found`             | Session ID does not exist                | Verify the session ID. The session may have already expired or been terminated.             |
 | `408 Request Timeout`       | Session creation timed out               | Retry the request. The service may be under heavy load.                                    |

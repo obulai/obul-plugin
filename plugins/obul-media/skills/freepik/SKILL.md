@@ -6,31 +6,18 @@ metadata:
   obul-skill:
     emoji: "🎨"
     requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
+      env: []
+      primaryEnv: ""
 registries: {}
 ---
 
 # Freepik
 
-Freepik provides high-quality AI image generation through the Mystic model. Supports multiple art styles, resolutions up to 4K, and advanced controls like style and structure references. No Freepik account needed — payment is handled automatically by the Obul proxy.
+Freepik provides high-quality AI image generation through the Mystic model. Supports multiple art styles, resolutions up to 4K, and advanced controls like style and structure references. No API key needed — payment is handled automatically via `obulx`.
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
-
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
-```
-
-Base URL: `https://proxy.obul.ai/proxy/https/api.freepik.com`
-
-To get an Obul API key, sign up at **https://my.obul.ai**.
+All requests use the `obulx` CLI, which handles x402 payment automatically.
 
 ## Common Operations
 
@@ -40,22 +27,30 @@ Generate an AI image using the Mystic model with customizable style, resolution,
 
 **Pricing:** $0.02
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/api.freepik.com/v1/x402/ai/mystic",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "prompt": "A futuristic city at sunset with neon lights reflecting on wet streets",
-    "model": "realism",
-    "resolution": "2k",
-    "aspect_ratio": "widescreen_16_9"
-  }
-}
+**Request:**
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"prompt": "A futuristic city at sunset with neon lights reflecting on wet streets", "model": "realism", "resolution": "2k", "aspect_ratio": "widescreen_16_9"}' \
+  "https://api.freepik.com/v1/x402/ai/mystic"
 ```
+
+**Parameters:**
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `prompt` | string | yes | — | Text description of the image to generate |
+| `model` | enum | no | `realism` | `realism`, `fluid`, `zen`, `flexible`, `super_real`, `editorial_portraits` |
+| `resolution` | enum | no | `2k` | `1k`, `2k`, `4k` |
+| `aspect_ratio` | enum | no | `square_1_1` | `square_1_1`, `widescreen_16_9`, `social_story_9_16`, `traditional_3_4` |
+| `hdr` | int | no | `50` | 0-100, detail level vs. natural appearance |
+| `creative_detailing` | int | no | `33` | 0-100, detail intensity per pixel |
+| `engine` | enum | no | `automatic` | `automatic`, `magnific_illusio`, `magnific_sharpy`, `magnific_sparkle` |
+| `fixed_generation` | bool | no | `false` | Reproducible results with identical settings |
+| `filter_nsfw` | bool | no | `true` | NSFW content filtering |
+| `structure_reference` | string | no | — | Base64-encoded image for structural guidance |
+| `structure_strength` | int | no | `50` | 0-100, how closely to follow structure reference |
+| `style_reference` | string | no | — | Base64-encoded image for aesthetic influence |
+| `adherence` | int | no | `50` | 0-100, balance between prompt fidelity and style transfer |
 
 **Response:** JSON with task status and generated image URLs.
 
@@ -65,22 +60,11 @@ Generate with higher detail and quality settings.
 
 **Pricing:** $0.05
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/api.freepik.com/v1/x402/ai/mystic",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "prompt": "Professional product photo of a luxury watch on marble surface, studio lighting",
-    "model": "super_real",
-    "resolution": "4k",
-    "hdr": 75,
-    "creative_detailing": 50
-  }
-}
+**Request:**
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"prompt": "Professional product photo of a luxury watch on marble surface, studio lighting", "model": "super_real", "resolution": "4k", "hdr": 75, "creative_detailing": 50}' \
+  "https://api.freepik.com/v1/x402/ai/mystic"
 ```
 
 **Response:** JSON with task status and generated image URLs.
@@ -111,7 +95,7 @@ Generate with higher detail and quality settings.
 
 | Error                       | Cause                                    | Solution                                                                                  |
 |-----------------------------|------------------------------------------|-------------------------------------------------------------------------------------------|
-| `402 Payment Required`      | Payment not processed or insufficient    | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai.   |
+| `402 Payment Required`      | Payment not processed or insufficient    | Verify your obulx setup is correct and your account has sufficient balance at my.obul.ai.  |
 | `400 Bad Request`           | Invalid request body                    | Ensure required fields like `prompt` are present and correctly formatted.                 |
 | `422 Unprocessable Entity`  | Prompt violates content policy          | Revise the prompt to comply with content guidelines.                                       |
 | `429 Too Many Requests`    | Rate limit exceeded                      | Add a short delay between requests.                                                       |

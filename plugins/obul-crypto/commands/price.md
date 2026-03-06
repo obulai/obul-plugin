@@ -15,14 +15,12 @@ Fetch the current price and market data for a cryptocurrency.
 
 ## Workflow
 
-1. Check that `OBUL_API_KEY` is set. If not, tell the user to get one at https://my.obul.ai/.
+1. Ensure you are logged in via `obulx login`. If not, tell the user to run `obulx login`.
 2. Normalize the input: map common ticker symbols to CoinGecko IDs (BTC -> bitcoin, ETH -> ethereum, SOL -> solana, etc.). If unsure, use the input as-is.
-3. Fetch prices from CoinGecko via the Obul proxy:
+3. Fetch prices from CoinGecko:
 
 ```bash
-curl -sS \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/pro-api.coingecko.com/api/v3/x402/simple/price?ids={coin_ids}&vs_currencies=usd&include_24hr_change=true&include_market_cap=true&include_24hr_vol=true"
+obulx "https://pro-api.coingecko.com/api/v3/x402/simple/price?ids={coin_ids}&vs_currencies=usd&include_24hr_change=true&include_market_cap=true&include_24hr_vol=true"
 ```
 
 4. Display results in a clean table format:
@@ -33,9 +31,7 @@ curl -sS \
 5. If the CoinGecko endpoint fails or returns empty, fall back to x402engine:
 
 ```bash
-curl -sS \
-  -H "X-Obul-Api-Key: ${OBUL_API_KEY}" \
-  "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/crypto/price?ids={coin_ids}"
+obulx "https://x402-gateway-production.up.railway.app/api/crypto/price?ids={coin_ids}"
 ```
 
 ## Common Ticker Mappings

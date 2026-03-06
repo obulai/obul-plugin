@@ -6,31 +6,18 @@ metadata:
   obul-skill:
     emoji: "🖼️"
     requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
+      env: []
+      primaryEnv: ""
 registries: {}
 ---
 
 # x402engine Image
 
-x402engine provides pay-per-call AI image generation endpoints. Choose between fast generation (FLUX Schnell), high-quality output (FLUX.2 Pro), or text-in-image rendering (Ideogram v3). No API key needed — payment is handled automatically by the Obul proxy.
+x402engine provides pay-per-call AI image generation endpoints. Choose between fast generation (FLUX Schnell), high-quality output (FLUX.2 Pro), or text-in-image rendering (Ideogram v3). No API key needed — payment is handled automatically via `obulx`.
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
-
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
-```
-
-Base URL: `https://proxy.obul.ai/proxy/https/x402engine.app`
-
-To get an Obul API key, sign up at **https://my.obul.ai**.
+All requests use the `obulx` CLI, which handles x402 payment automatically.
 
 ## Common Operations
 
@@ -40,18 +27,11 @@ Generate an image quickly for prototyping and drafts.
 
 **Pricing:** $0.015
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402engine.app/api/image/fast",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "prompt": "A serene mountain landscape at dawn with mist in the valleys"
-  }
-}
+**Request:**
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"prompt": "A serene mountain landscape at dawn with mist in the valleys"}' \
+  "https://x402engine.app/api/image/fast"
 ```
 
 **Response:** Returns the generated image data (PNG/JPEG).
@@ -62,18 +42,11 @@ Generate a higher-quality image for production use.
 
 **Pricing:** $0.05
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402engine.app/api/image/quality",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "prompt": "Professional product photo of a luxury watch on marble surface, studio lighting"
-  }
-}
+**Request:**
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"prompt": "Professional product photo of a luxury watch on marble surface, studio lighting"}' \
+  "https://x402engine.app/api/image/quality"
 ```
 
 **Response:** Returns a higher-quality generated image with better detail and coherence.
@@ -84,18 +57,11 @@ Generate an image with accurately rendered text, ideal for logos, signs, and typ
 
 **Pricing:** $0.12
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402engine.app/api/image/text",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "prompt": "A neon sign that reads OPEN 24 HOURS on a dark brick wall"
-  }
-}
+**Request:**
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"prompt": "A neon sign that reads OPEN 24 HOURS on a dark brick wall"}' \
+  "https://x402engine.app/api/image/text"
 ```
 
 **Response:** Returns an image with accurately rendered text.
@@ -128,7 +94,7 @@ Generate an image with accurately rendered text, ideal for logos, signs, and typ
 
 | Error                       | Cause                                    | Solution                                                                                  |
 |-----------------------------|------------------------------------------|-------------------------------------------------------------------------------------------|
-| `402 Payment Required`      | Payment not processed or insufficient    | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai.   |
+| `402 Payment Required`      | Payment not processed or insufficient    | Verify your obulx setup is correct and your account has sufficient balance at my.obul.ai.  |
 | `400 Bad Request`           | Missing or invalid request body          | Ensure `prompt` is present and is a non-empty string.                                      |
 | `422 Unprocessable Entity`  | Prompt violates content policy           | Revise the prompt to comply with content guidelines.                                       |
 | `429 Too Many Requests`     | Rate limit exceeded                      | Add a short delay between requests.                                                       |

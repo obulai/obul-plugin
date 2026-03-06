@@ -5,9 +5,6 @@ homepage: https://www.genbase.fun
 metadata:
   obul-skill:
     emoji: "🎬"
-    requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
 registries: {}
 ---
 
@@ -19,20 +16,16 @@ generation. Through the Obul proxy, each generation is paid individually — no 
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
+All requests use the `obulx` CLI, which handles proxy routing and authentication automatically.
 
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+Install and log in (one-time setup):
+
+```sh
+npm install -g @obul.ai/obulx
+obulx login
 ```
 
-Base URL: `https://proxy.obul.ai/proxy/https/www.genbase.fun`
-
-To get an Obul API key, sign up at **https://my.obul.ai**.
+Base URL: `https://www.genbase.fun`
 
 ## Common Operations
 
@@ -43,21 +36,10 @@ landscape, portrait, wide, and tall formats. Generation takes 3-15 minutes depen
 
 **Pricing:** $0.20
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/www.genbase.fun/api/video/create-sora2",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "prompt": "A drone shot flying over a misty mountain valley at sunrise, cinematic lighting",
-    "model": "sora-2",
-    "seconds": "10",
-    "size": "1280x720"
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"prompt": "A drone shot flying over a misty mountain valley at sunrise, cinematic lighting", "model": "sora-2", "seconds": "10", "size": "1280x720"}' \
+  "https://www.genbase.fun/api/video/create-sora2"
 ```
 
 **Parameters:**
@@ -87,22 +69,10 @@ with flexible duration (1-15 seconds) and multiple aspect ratios. Generation tak
 
 **Pricing:** $0.01 per second of video (1-15 seconds)
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/www.genbase.fun/api/video/create-xai",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "prompt": "A cat playing piano in a jazz club, warm ambient lighting",
-    "duration": 10,
-    "aspectRatio": "16:9",
-    "resolution": "720p",
-    "mode": "text-to-video"
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"prompt": "A cat playing piano in a jazz club, warm ambient lighting", "duration": 10, "aspectRatio": "16:9", "resolution": "720p", "mode": "text-to-video"}' \
+  "https://www.genbase.fun/api/video/create-xai"
 ```
 
 **Parameters:**
@@ -133,18 +103,10 @@ reference image. Generation takes 30-90 seconds.
 
 **Pricing:** $0.02
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/www.genbase.fun/api/image/create",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "prompt": "A minimalist logo design for a tech startup, clean lines, blue and white color scheme"
-  }
-}
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"prompt": "A minimalist logo design for a tech startup, clean lines, blue and white color scheme"}' \
+  "https://www.genbase.fun/api/image/create"
 ```
 
 **Parameters:**
@@ -169,14 +131,8 @@ Poll the status of a Sora 2 video generation task. Free endpoint — no payment 
 
 **Pricing:** $0.00
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/www.genbase.fun/api/video/query?id={video_id}",
-  "headers": {
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://www.genbase.fun/api/video/query?id={video_id}"
 ```
 
 **Response:**
@@ -197,14 +153,8 @@ Poll the status of an xAI Grok Imagine video generation task. Free endpoint — 
 
 **Pricing:** $0.00
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/www.genbase.fun/api/video/query-xai?id={request_id}",
-  "headers": {
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
+```sh
+obulx "https://www.genbase.fun/api/video/query-xai?id={request_id}"
 ```
 
 **Response:**
@@ -259,7 +209,7 @@ Poll the status of an xAI Grok Imagine video generation task. Free endpoint — 
 
 | Error                          | Cause                                        | Solution                                                                                  |
 |--------------------------------|----------------------------------------------|-------------------------------------------------------------------------------------------|
-| `402 Payment Required`         | Payment not processed or insufficient        | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai.  |
+| `402 Payment Required`         | Payment not processed or insufficient        | Verify your account has sufficient balance at my.obul.ai. Run `obulx login` if not authenticated. |
 | `400 Bad Request`              | Missing or invalid request body              | Ensure `prompt` is present. Check that `model`, `seconds`, and `size` are valid values.   |
 | `422 Content Policy Violation` | Prompt violates content policy               | Revise prompt to comply with guidelines. Contact support for refund if charged.            |
 | `404 Not Found`                | Invalid video/image ID in query              | Verify the ID matches the one returned from the creation endpoint.                        |

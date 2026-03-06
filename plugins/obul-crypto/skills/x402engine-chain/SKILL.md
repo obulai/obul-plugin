@@ -6,31 +6,18 @@ metadata:
   obul-skill:
     emoji: "⛓️"
     requires:
-      env: ["OBUL_API_KEY"]
-      primaryEnv: "OBUL_API_KEY"
+      env: []
+      primaryEnv: ""
 registries: {}
 ---
 
 # x402engine Chain
 
-x402engine provides pay-per-call blockchain operations. Covers wallet analytics, ENS resolution, token metadata, and transaction simulation. No API key needed — payment is handled automatically by the Obul proxy.
+x402engine provides pay-per-call blockchain operations. Covers wallet analytics, ENS resolution, token metadata, and transaction simulation. No API key needed — payment is handled automatically via `obulx`.
 
 ## Authentication
 
-All requests route through the Obul proxy. Include your Obul API key in every request:
-
-```json
-{
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  }
-}
-```
-
-Base URL: `https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app`
-
-To get an Obul API key, sign up at **https://my.obul.ai**.
+All requests use the `obulx` CLI, which handles x402 payment automatically.
 
 ## Common Operations
 
@@ -40,19 +27,11 @@ Get token balances for a wallet address across supported chains.
 
 **Pricing:** $0.005
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/wallet/balances",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
-    "chain": "ethereum"
-  }
-}
+**Request:**
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045", "chain": "ethereum"}' \
+  "https://x402-gateway-production.up.railway.app/api/wallet/balances"
 ```
 
 **Response:** JSON with token balances, USD values, and total portfolio value.
@@ -63,19 +42,11 @@ Get recent transaction history for a wallet address.
 
 **Pricing:** $0.005
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/wallet/transactions",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
-    "chain": "ethereum"
-  }
-}
+**Request:**
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045", "chain": "ethereum"}' \
+  "https://x402-gateway-production.up.railway.app/api/wallet/transactions"
 ```
 
 **Response:** JSON array of recent transactions with hash, from, to, value, and timestamp.
@@ -86,18 +57,11 @@ Get profit and loss analysis for a wallet.
 
 **Pricing:** $0.01
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/wallet/pnl",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
-  }
-}
+**Request:**
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"}' \
+  "https://x402-gateway-production.up.railway.app/api/wallet/pnl"
 ```
 
 **Response:** JSON with realized/unrealized PnL breakdown per token.
@@ -108,18 +72,9 @@ Resolve an ENS name to an Ethereum address.
 
 **Pricing:** $0.001
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/ens/resolve",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "query": {
-    "name": "vitalik.eth"
-  }
-}
+**Request:**
+```sh
+obulx "https://x402-gateway-production.up.railway.app/api/ens/resolve?name=vitalik.eth"
 ```
 
 **Response:** JSON with the resolved Ethereum address.
@@ -130,18 +85,9 @@ Reverse resolve an Ethereum address to its ENS name.
 
 **Pricing:** $0.001
 
-```json
-{
-  "method": "GET",
-  "url": "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/ens/reverse",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "query": {
-    "address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
-  }
-}
+**Request:**
+```sh
+obulx "https://x402-gateway-production.up.railway.app/api/ens/reverse?address=0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
 ```
 
 **Response:** JSON with the ENS name associated with the address.
@@ -152,21 +98,50 @@ Get current prices for multiple tokens.
 
 **Pricing:** $0.005
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/token/prices",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "tokens": ["bitcoin", "ethereum", "solana"]
-  }
-}
+**Request:**
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"tokens": ["bitcoin", "ethereum", "solana"]}' \
+  "https://x402-gateway-production.up.railway.app/api/token/prices"
 ```
 
 **Response:** JSON with current prices for each requested token. Supports up to 200 tokens per request.
+
+### Token Metadata
+- **URL**: `https://x402-gateway-production.up.railway.app/api/token/metadata`
+- **Method**: GET
+- **Pricing**: ~$0.002 per request
+
+**Request:**
+```sh
+obulx "https://x402-gateway-production.up.railway.app/api/token/metadata?id=ethereum"
+```
+
+**Response:** JSON with token name, symbol, description, links, and contract addresses.
+
+### Crypto Price
+- **URL**: `https://x402-gateway-production.up.railway.app/api/crypto/price`
+- **Method**: GET
+- **Pricing**: ~$0.001 per request
+
+**Request:**
+```sh
+obulx "https://x402-gateway-production.up.railway.app/api/crypto/price?ids=bitcoin,ethereum"
+```
+
+**Response:** JSON with current USD prices for the requested coins.
+
+### Crypto Trending
+- **URL**: `https://x402-gateway-production.up.railway.app/api/crypto/trending`
+- **Method**: GET
+- **Pricing**: ~$0.001 per request
+
+**Request:**
+```sh
+obulx "https://x402-gateway-production.up.railway.app/api/crypto/trending"
+```
+
+**Response:** JSON array of currently trending cryptocurrencies.
 
 ### Transaction Simulate
 
@@ -174,22 +149,11 @@ Simulate a transaction before sending to preview the outcome.
 
 **Pricing:** $0.01
 
-```json
-{
-  "method": "POST",
-  "url": "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/tx/simulate",
-  "headers": {
-    "Content-Type": "application/json",
-    "x-obul-api-key": "{{OBUL_API_KEY}}"
-  },
-  "body": {
-    "from": "0x...",
-    "to": "0x...",
-    "value": "1000000000000000000",
-    "data": "0x...",
-    "chain": "ethereum"
-  }
-}
+**Request:**
+```sh
+obulx -X POST -H "Content-Type: application/json" \
+  -d '{"from": "0x...", "to": "0x...", "value": "1000000000000000000", "data": "0x...", "chain": "ethereum"}' \
+  "https://x402-gateway-production.up.railway.app/api/tx/simulate"
 ```
 
 **Response:** JSON with simulation results including gas estimate, state changes, and potential errors.
@@ -225,11 +189,17 @@ Simulate a transaction before sending to preview the outcome.
 - **ENS is Ethereum-specific** — ENS endpoints work only with Ethereum
 - **Token limit** — The token prices endpoint supports up to 200 tokens per request
 
+## Notes
+- Prices range from $0.001 to $0.01 per request depending on endpoint complexity.
+- Wallet endpoints accept EVM addresses and support multiple chains (ethereum, base, polygon, arbitrum, etc.).
+- ENS endpoints are Ethereum-specific.
+- The `obulx` CLI handles x402 payment automatically -- no USDC wallet or payment header needed.
+
 ## Error Handling
 
 | Error                       | Cause                                    | Solution                                                                                  |
 |-----------------------------|------------------------------------------|-------------------------------------------------------------------------------------------|
-| `402 Payment Required`      | Payment not processed or insufficient    | Verify your OBUL_API_KEY is valid and your account has sufficient balance at my.obul.ai.   |
+| `402 Payment Required`      | Payment not processed or insufficient    | Verify your obulx setup is correct and your account has sufficient balance at my.obul.ai.  |
 | `400 Bad Request`           | Invalid request body                    | Ensure required fields are present and correctly formatted.                                |
 | `404 Not Found`             | Address or token not found               | Verify the wallet address or token symbol is correct.                                       |
 | `429 Too Many Requests`    | Rate limit exceeded                      | Add a short delay between requests.                                                       |

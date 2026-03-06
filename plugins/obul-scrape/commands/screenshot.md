@@ -4,7 +4,7 @@ description: Take a screenshot of a webpage via x402engine ($0.01/request)
 
 # Screenshot
 
-Take a screenshot of the given URL using x402engine through the Obul proxy.
+Take a screenshot of the given URL using x402engine.
 
 **Cost:** $0.01 per request
 
@@ -21,19 +21,15 @@ This command uses the **x402engine-web** skill exclusively (`GET /api/web/screen
 
 ## Workflow
 
-1. Check that `OBUL_API_KEY` is set (see setup rule)
-2. Execute the screenshot request through the Obul proxy:
+1. Ensure you are logged in via `obulx login` (see setup rule)
+2. Execute the screenshot request:
    ```bash
-   curl -sS \
-     -H "x-obul-api-key: ${OBUL_API_KEY}" \
-     "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/web/screenshot?url=<TARGET_URL>"
+   obulx "https://x402-gateway-production.up.railway.app/api/web/screenshot?url=<TARGET_URL>"
    ```
 3. The response contains a base64-encoded image in JSON format
 4. Decode and save the image to a file:
    ```bash
-   curl -sS \
-     -H "x-obul-api-key: ${OBUL_API_KEY}" \
-     "https://proxy.obul.ai/proxy/https/x402-gateway-production.up.railway.app/api/web/screenshot?url=<TARGET_URL>" \
+   obulx "https://x402-gateway-production.up.railway.app/api/web/screenshot?url=<TARGET_URL>" \
      | jq -r '.image' | base64 -d > screenshot.png
    ```
 5. If the user specified `--save <filename>`, save to that filename; otherwise use `screenshot.png`
